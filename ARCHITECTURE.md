@@ -30,6 +30,8 @@ js/
   nav.js            scroll ile menü vurgusu
   share.js          WhatsApp linki
   stats.js          sayaç: görüntülenme / tamamlanan test (GoatCounter)
+  richtext.js       alıntılı metin ([@anahtar]), kaynak listesi
+  references.js     kaynak kayıtları (REFERENCES)
   quiz.js           adım adım test
   result.js         sonuç paneli, PDF özeti
   scratch.js        kazı-kazan canvas
@@ -54,6 +56,7 @@ main.js
  ├─ nav.js               (bağımsız)
  ├─ share.js ─────────── i18n.js
  ├─ stats.js ─────────── config.js (STATS), i18n.js
+ ├─ richtext.js ──────── references.js, i18n.js
  ├─ quiz.js ──────────── i18n.js
  └─ result.js ────────── scoring.js ── config.js (SCORING)
                           i18n.js
@@ -63,7 +66,7 @@ main.js
 Başlatma sırası (`main.js`):
 
 1. `await initI18n()`
-2. `initLangSwitch()`, `initSite()`, `initNav()`, `initShare()`
+2. `initLangSwitch()`, `initSite()`, `initNav()`, `initShare()`, `initRichText()`
 3. `initStats()` (beklenmez, sayılar gelince kutu kendi açılır)
 4. `createResult({...})`
 5. `createQuiz({...})`; `onFinish` içinde `trackTestCompleted()` çağrılır, sonra `result.show()`
@@ -97,6 +100,7 @@ Başlatma sırası (`main.js`):
 | `langswitch.js` | `mark` | `aria-pressed` günceller |
 | `site.js` | `renderFooter` | footer'ı yeniden çizer |
 | `share.js` | `update` | link `href`'ini yeniden kurar |
+| `richtext.js` | `renderAll` | Hakkımda ve Narkolepsi metinlerini, alıntı numaralarını ve kaynak listelerini yeniden çizer |
 | `stats.js` | `render` | sayıları yeni dilin biçimiyle yazar (yalnızca sayaç açıksa kayıtlı) |
 | `result.js` | `render` | mesaj + PDF özeti + kapak yazısı |
 | `quiz.js` | `refreshText` | soru ve seçenek metinleri, ilerleme, buton etiketi |
@@ -107,9 +111,10 @@ meta         title, description, dateLocale
 site         name
 nav          aria, home, about, narcolepsy, test
 lang         label
+refs         title, cite({n})
 home         tagline, start, views, tests
 about        lead, big, p1, p2
-narcolepsy   title, soon
+narcolepsy   title, body[]   (paragraf dizisi; "## " ile başlayan satır h3, [@anahtar] alıntı)
 test         title, subtitle, progress({n},{total}), prev, next, finish, tip
 questions[]  soru metinleri
 scale[]      seçenek etiketleri
@@ -120,9 +125,9 @@ print        title, note
 footer       role, note, statsNote   (statsNote yalnızca sayaç açıkken gösterilir)
 ```
 
-HTML'e `data-i18n` ile bağlananlar: `site.name`, `nav.*`, `home.*`, `about.*`, `narcolepsy.*`, `test.title`, `test.subtitle`, `test.prev`, `test.tip`, `result.hint`, `result.skip`, `result.pdf`, `result.pdfTip`, `result.edit`, `result.restart`, `share.button`.
+HTML'e `data-i18n` ile bağlananlar: `site.name`, `nav.*`, `home.*`, `narcolepsy.title`, `test.title`, `test.subtitle`, `test.prev`, `test.tip`, `result.hint`, `result.skip`, `result.pdf`, `result.pdfTip`, `result.edit`, `result.restart`, `share.button`.
 
-JS ile çizilenler: `questions`, `scale`, `test.progress`, `test.next`, `test.finish`, `messages.*`, `print.*`, `meta.dateLocale`, `footer.*`, `share.text`, `result.cover`.
+JS ile çizilenler: `about.*` (lead, big, p1, p2) ve `narcolepsy.body` (`richtext.js`, `data-i18n-rich*` ile bağlı), `refs.*`, `questions`, `scale`, `test.progress`, `test.next`, `test.finish`, `messages.*`, `print.*`, `meta.dateLocale`, `footer.*`, `share.text`, `result.cover`.
 
 ### Tutarlılık kuralları
 - `config.js > QUIZ.questionCount` = `questions.length`, `QUIZ.scaleSize` = `scale.length` (her dil dosyasında).
@@ -142,6 +147,7 @@ JS'in bağlandığı id ve attribute'lar:
 | `.site-nav a[href="#..."]`, `#about`, `#narcolepsy`, `#test` | `nav.js` |
 | `[data-share-whatsapp]` | `share.js` |
 | `#stats`, `#stat-views`, `#stat-tests` | `stats.js` (`#stats` varsayılan `hidden`) |
+| `[data-rich-block]`, `[data-i18n-rich]`, `[data-i18n-rich-list]`, `[data-refs]` | `richtext.js` |
 | `#test-title` | `main.js` (`scrollToTest`) |
 | `#quiz-panel`, `#quiz-viewport`, `#quiz-track`, `#prev-btn`, `#next-btn` | `quiz.js` |
 | `#progress-text`, `#progress-fill`, `#progress-bar` | `quiz.js` |
@@ -214,6 +220,17 @@ Dışa aktarır: `statsEnabled`, `initStats()`, `trackTestCompleted()`. Ayar: `c
 - Sayılar `Intl.NumberFormat(t("meta.dateLocale"))` ile yazılır, dil değişince yeniden yazılır.
 - GoatCounter tarafı: site ayarlarında "Allow adding visitor counts on your website" açık olmalı (varsayılan kapalı). Sayaç yanıtları en fazla 4 saat önbelleklenir, sayılar gecikmeli güncellenir.
 
+### `richtext.js` + `references.js` (alıntılar)
+Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar: { text, url? } }` (dilden bağımsız).
+
+- **Kutu:** `[data-rich-block="id"]` (Hakkımda ve Narkolepsi'de `.scroll-box`). İçinde iki tür eleman: `[data-i18n-rich="anahtar"]` (dil dosyasında string) ve `[data-i18n-rich-list="anahtar"]` (dil dosyasında dizi, her eleman bir paragraf; `## ` ile başlayan h3 olur). Kaynak listesi `[data-refs]` alanına yazılır.
+- **Söz dizimi:** metinde `[@anahtar]` → üst simge numara (`a.cite`, `href="#ref-<kutu>-<n>"`). Numara kutu içinde, DOM sırasıyla ilk geçişe göre verilir; aynı anahtar aynı numarayı korur. Numaralar kutuya özeldir (iki kutuda aynı kaynak farklı numara alabilir).
+- **Kaynak listesi:** `<ol>`, sadece alıntılanan kaynaklar, alıntı sırasıyla. `url` varsa `target="_blank" rel="noopener noreferrer"` link, yoksa düz metin. Sadece `http(s)://` ile başlayan url link olur (`javascript:` vb. reddedilir). Hiç alıntı yoksa liste alanı gizli kalır.
+- **Hata durumu:** `REFERENCES` içinde olmayan anahtar metinde olduğu gibi (`[@anahtar]`) kalır ve konsola uyarı yazar.
+- **Tıklama:** numaraya tıklayınca adres değişmeden kutu içinde ilgili kaynağa kaydırılır, kaynak kısa süre vurgulanır (`.flash`). `prefers-reduced-motion` altında animasyonsuz.
+- Dil değişince (`onLangChange`) tüm kutular yeniden çizilir. HTML içindeki İngilizce metin yalnızca JS yüklenmeden önceki yedektir.
+- Metin DOM'a `textContent` / `append` ile eklenir, `innerHTML` kullanılmaz.
+
 ---
 
 ## 7. CSS yapısı
@@ -243,6 +260,8 @@ Dışa aktarır: `statsEnabled`, `initStats()`, `trackTestCompleted()`. Ayar: `c
 - `.btn`, `.btn-ghost`
 - İlerleme: `.progress`, `.progress-text`, `.progress-bar`
 - Kayar test: `.viewport` (overflow hidden), `.track` (flex, transform geçişi), `.slide` (`flex: 0 0 100%`, içinde 4px padding), `.question-text`, `.options`, `.option`, `.opt-key`. Seçili durum `input:checked + label`.
+- `.scroll-box`: `max-height: min(62vh, 30rem)`, `overflow-y: auto`, solda hizalı (sayfanın geri kalanı ortalı). Kaydırma gölgesi `background-attachment: local` ile. Klavye için HTML'de `tabindex="0" role="region"` + isim (`aria-label` / `aria-labelledby`).
+- Alıntılar: `.cite`, `.refs`, `.refs-title`, `.refs li.flash`.
 - Sonuç: `.scratch-card`, `.scratch-content`, canvas üst katman, `.revealed` ile `opacity: 0`.
 - `prefers-reduced-motion: reduce` altında geçişler kapalı.
 
@@ -275,3 +294,8 @@ Dışa aktarır: `statsEnabled`, `initStats()`, `trackTestCompleted()`. Ayar: `c
 | Sayılan yollar | `config.js > STATS.paths` |
 | Home içeriği | `index.html > #home` + `locales/*.js > home` |
 | Sayacın gösterdiği etiketler | `locales/*.js > home.views`, `home.tests` |
+| Kaynak ekleme | `references.js > REFERENCES`, metinde `[@anahtar]` |
+| Narkolepsi metnine paragraf / başlık ekleme | her `locales/*.js > narcolepsy.body` dizisine eleman (başlık için `## ` ile başla) |
+| Hakkımda metnine alıntı | `locales/*.js > about.lead / big / p1 / p2` içine `[@anahtar]` |
+| Kutuda kaydırma yüksekliği, hizalama | `components.css > .scroll-box` |
+| Kaynak başlığı, "Kaynak n" etiketi | `locales/*.js > refs` |

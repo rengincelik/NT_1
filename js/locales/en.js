@@ -18,6 +18,11 @@ export default {
 
   lang: { label: "Language" },
 
+  refs: {
+    title: "Sources",
+    cite: "Source {n}",
+  },
+
   about: {
     lead: "For 15 years I walked around like a zombie and blamed it on \"engineering stress\". When my battery died out of nowhere in the middle of the day, or my knees buckled when I laughed, I called it \"just being busy\".",
     big: "Turns out it has a name: Narcolepsy Type 1.",
@@ -32,9 +37,18 @@ export default {
     tests: "tests completed",
   },
 
+  // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
+  // Aşağıdakiler GEÇİCİ metindir.
   narcolepsy: {
     title: "Narcolepsy",
-    soon: "Coming soon.",
+    body: [
+      "## Placeholder heading",
+      "This is placeholder text for the narcolepsy section. Replace it with your own writing. To cite a source, put its key in square brackets with an @ sign, like this.[@placeholder-1]",
+      "The same key can be used again and keeps its number.[@placeholder-1] A different key gets the next number.[@placeholder-2]",
+      "## Another placeholder heading",
+      "Lines that start with two hash marks become headings. Everything else is a paragraph.",
+      "This box scrolls when the text is taller than the box. Add as many paragraphs as you need.",
+    ],
   },
 
   test: {

@@ -17,8 +17,8 @@ let completedSent = false;
 // Geliştirme ortamı, DNT/GPC açık ziyaretçi ve kendi tarayıcın (localStorage.skipgc) sayılmaz.
 function shouldTrack() {
   if (!statsEnabled) return false;
-  if (["", "localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return false;
-  if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl) return false;
+  //if (["", "localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return false;
+  //if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl) return false;
   try {
     if (localStorage.getItem("skipgc")) return false;
   } catch { /* özel pencere vb. */ }
@@ -63,7 +63,7 @@ export async function initStats() {
       fetchCount(STATS.paths.testDone),
     ]);
     // İkisi de 0 ise (yeni site ya da yanlış ayar) kutuyu gösterme
-    if (views === 0 && tests === 0) return;
+    // if (views === 0 && tests === 0) return;
     counts = { views, tests };
     render();
   } catch (err) {

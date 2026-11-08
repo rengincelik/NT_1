@@ -8,6 +8,7 @@ import { initShare } from "./share.js";
 import { createQuiz } from "./quiz.js";
 import { createResult } from "./result.js";
 import { initStats, trackTestCompleted } from "./stats.js";
+import { initRichText } from "./richtext.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -17,6 +18,7 @@ initLangSwitch();
 initSite();
 initNav();
 initShare();
+initRichText();
 initStats(); // beklenmez: sayılar gelince kutu kendi kendine açılır
 
 const quizPanel = $("#quiz-panel");

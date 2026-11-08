@@ -131,6 +131,50 @@
 
 .tip { margin-top: 1rem; font-size: .85rem; }
 
+/* Kaydırılabilir metin kutusu (Hakkımda, Narkolepsi). Uzun metin solda hizalı okunur. */
+.scroll-box {
+  margin-top: 1rem;
+  text-align: left;
+  max-height: min(62vh, 30rem);
+  overflow-y: auto;
+  padding: 1.5rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  /* Kaydırma gölgesi: üstte/altta devam eden içerik olduğunu gösterir */
+  background-image:
+    linear-gradient(var(--surface) 30%, transparent),
+    linear-gradient(transparent, var(--surface) 70%),
+    radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, .18), transparent),
+    radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, .18), transparent);
+  background-position: center top, center bottom, center top, center bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 2.5rem, 100% 2.5rem, 100% .9rem, 100% .9rem;
+  background-attachment: local, local, scroll, scroll;
+}
+
+.scroll-box > :first-child { margin-top: 0; }
+.scroll-box h3 { margin: 1.5rem 0 .5rem; }
+.scroll-box h3:first-child { margin-top: 0; }
+
+/* Alıntılar ve kaynak listesi */
+sup { line-height: 0; }
+.cite { padding: 0 .2em; font-size: .85em; font-weight: 600; text-decoration: none; }
+.cite:hover { text-decoration: underline; }
+
+.refs {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+.refs-title { margin: 0 0 .5rem; font-size: 1rem; }
+.refs ol { margin: 0; padding-left: 1.25rem; }
+.refs li { margin-bottom: .4rem; overflow-wrap: anywhere; transition: background-color .6s; }
+.refs li.flash { background: var(--accent-soft); }
+
 /* Silerek açılan sonuç */
 .scratch-card {
   position: relative;

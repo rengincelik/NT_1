@@ -18,6 +18,11 @@ export default {
 
   lang: { label: "Dil" },
 
+  refs: {
+    title: "Kaynaklar",
+    cite: "Kaynak {n}",
+  },
+
   about: {
     lead: "15 yıl boyunca zombi gibi gezmeyi \"mühendislik stresi\", gün ortasında pilimin ani bitmesini ve gülerken dizlerimin bağının çözülmesini \"yoğunluk\" zannettim.",
     big: "Meğer adı Narkolepsi Tip 1'miş.",
@@ -32,9 +37,18 @@ export default {
     tests: "tamamlanan test",
   },
 
+  // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
+  // Aşağıdakiler GEÇİCİ metindir.
   narcolepsy: {
     title: "Narkolepsi",
-    soon: "Yakında.",
+    body: [
+      "## Geçici başlık",
+      "Bu, narkolepsi bölümü için geçici metindir. Kendi yazınla değiştir. Kaynak göstermek için anahtarını köşeli parantez içinde @ işaretiyle yaz, şöyle.[@placeholder-1]",
+      "Aynı anahtar tekrar kullanılabilir ve numarasını korur.[@placeholder-1] Farklı bir anahtar bir sonraki numarayı alır.[@placeholder-2]",
+      "## Başka bir geçici başlık",
+      "İki diyez ile başlayan satırlar başlık olur. Geri kalan her şey paragraftır.",
+      "Metin kutudan uzun olunca bu kutu kaydırılır. İstediğin kadar paragraf ekleyebilirsin.",
+    ],
   },
 
   test: {

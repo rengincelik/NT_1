@@ -17,7 +17,9 @@ Metinler `js/locales/en.js` ve `js/locales/tr.js` içinde. `data-i18n` ile bağl
 - [ ] **Sonuç mesajı** (`messages.neutral`): Geçici metin. Eşik eklenince bu durum kullanılmayacak, kaldırılacak ya da bir hata durumuna çevrilecek.
 - [ ] **Hakkında metni** (`about.p1`): "Türkiye'de binlerce insan" iddiası kaynaklı değil. Kaynak bulup rakamı düzelt ya da ifadeyi yumuşat. Aynı iddia İngilizce sürümünde de var.
 - [ ] **Hakkında metni** (`about.p2`): "Klinikte kullanılan" ifadesi doğrulanmalı (ölçeğin hangi amaçla kullanıldığı, ön tarama mı, tanı destek mi).
-- [ ] **Narkolepsi bölümü** (`narcolepsy.*`): Şu an yer tutucu. İçerik yazılacak, tıbbi bilgiler doğrulanmış kaynaklardan alınacak ve kaynakça eklenecek.
+- [ ] **Narkolepsi bölümü** (`narcolepsy.body`): Şu an geçici metin. İçerik yazılacak, tıbbi bilgiler doğrulanmış kaynaklardan alınacak, alıntılar `[@anahtar]` ile eklenecek.
+- [ ] **Geçici kaynaklar** (`js/references.js`: `placeholder-1`, `placeholder-2`): Gerçek künye ve linklerle değiştir, kullanılmayanları sil.
+- [ ] **Hakkımda metinlerinde alıntı** (`about.p1`, `about.p2`, ...): Yukarıdaki iddialar için kaynak eklenince `[@anahtar]` ile bağla.
 - [ ] **Footer notu** (`footer.note`): Hukuki/tıbbi sorumluluk reddi son kez gözden geçirilmeli. "Cevapların hiçbir yere kaydedilmez" cümlesi, cevapları gönderen bir özellik eklenirse yanlış olur.
 - [ ] **Sayaç notu** (`footer.statsNote`): Yalnızca sayaç açıkken görünür. Gerçekte ne sayıldığını doğru anlatıyor mu, son kez oku (ziyaret ve tamamlanan test sayısı, anonim).
 - [ ] **Home metinleri** (`home.tagline`, `home.views`, `home.tests`): `tagline` şimdilik `test.subtitle` ile aynı geçici metin. Home için asıl cümleyi yaz.
@@ -87,7 +89,7 @@ Metinler `js/locales/en.js` ve `js/locales/tr.js` içinde. `data-i18n` ile bağl
 - [ ] Skor katsayıları ve eşik makaleyle doğrulandı, birim testi yazıldı
 - [ ] Soru ve cevap metinleri orijinal ölçekle karşılaştırıldı
 - [ ] Tıbbi içeriğin tamamı kaynaklı
-- [ ] Yer tutucu hiçbir metin kalmadı (`config.js`, `footer.role`, `narcolepsy.*`, `messages.neutral`)
+- [ ] Yer tutucu hiçbir metin kalmadı (`config.js`, `footer.role`, `narcolepsy.body`, `references.js`, `home.tagline`, `messages.neutral`)
 - [ ] Her iki dilde baştan sona manuel geçiş yapıldı
 - [ ] Gerçek telefonda test (iOS + Android), açık ve koyu tema
 - [ ] Paylaşım önizlemesi WhatsApp'ta kontrol edildi

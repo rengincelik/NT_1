@@ -27,7 +27,6 @@ export const SCORING = {
 // Kurulum: goatcounter.com'da site aç, kodu buraya yaz (ör. "narkolepsi" → narkolepsi.goatcounter.com),
 // site ayarlarında "Allow adding visitor counts on your website" seçeneğini aç.
 export const STATS = {
-  goatcounterCode: "    <script data-goatcounter=\"https://rcelik.goatcounter.com/count\"\n" +
-	  "            async src=\"//gc.zgo.at/count.js\"></script>",
+  goatcounterCode: "rcelik",
   paths: { view: "/", testDone: "/test-completed" },
 };
