@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Narcolepsy</title>
+  <meta name="description" content="A 2-minute narcolepsy screening (Swiss Narcolepsy Scale).">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/background.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <!-- Arka plan katmanı: ileride shader/canvas buraya takılabilir -->
+  <div class="bg" id="bg" aria-hidden="true"></div>
+
+  <!--
+    Metinler js/locales/*.js dosyalarından gelir (data-i18n anahtarları).
+    Buradaki İngilizce metinler JS yüklenmeden önce / JS kapalıyken görünen yedektir.
+  -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#home" class="brand" data-i18n="site.name">Narcolepsy</a>
+      <nav class="site-nav" data-i18n-aria-label="nav.aria" aria-label="Main menu">
+        <a href="#home" data-i18n="nav.home">Home</a>
+        <a href="#about" data-i18n="nav.about">About me</a>
+        <a href="#narcolepsy" data-i18n="nav.narcolepsy">Narcolepsy</a>
+        <a href="#test" data-i18n="nav.test">Test</a>
+      </nav>
+      <div class="lang-list" id="lang-list" role="group" data-i18n-aria-label="lang.label" aria-label="Language"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="home" class="section section-first">
+      <div class="container hero">
+        <h1 class="hero-title" data-i18n="site.name">Narcolepsy</h1>
+        <p class="muted" data-i18n="home.tagline">Swiss Narcolepsy Scale (SNS) · about 2 minutes</p>
+        <div class="row">
+          <a class="btn" href="#test" data-i18n="home.start">Take the test</a>
+          <a class="btn btn-ghost" data-share-whatsapp data-i18n="share.button">Share on WhatsApp</a>
+        </div>
+        <!-- stats.js doldurur; sayaç kapalıysa ya da veri gelmezse gizli kalır -->
+        <div class="stats" id="stats" hidden>
+          <div class="stat">
+            <span class="stat-num" id="stat-views"></span>
+            <span class="stat-label" data-i18n="home.views">page views</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" id="stat-tests"></span>
+            <span class="stat-label" data-i18n="home.tests">tests completed</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="lead" data-i18n="about.lead">For 15 years I walked around like a zombie and blamed it on "engineering stress". When my battery died out of nowhere in the middle of the day, or my knees buckled when I laughed, I called it "just being busy".</h2>
+        <p class="big" data-i18n="about.big">Turns out it has a name: Narcolepsy Type 1.</p>
+        <p data-i18n="about.p1">Everyone around us says "we're all tired, don't make a fuss", and doctors just say "you're not sleeping enough", so it never occurs to you. Noticing a fault in your own body can take years. In Turkey, thousands of people are still groping around in the dark and running into walls.</p>
+        <p data-i18n="about.p2">If you have ever had those moments where you quietly think "something is off with me, nobody can be this exhausted", you don't need to read long articles. There is a practical 5-question screening test used in clinics, the Swiss Narcolepsy Scale (SNS). It took me 15 years to learn this. I put it here so you can check in 2 minutes.</p>
+      </div>
+    </section>
+
+    <!-- NARCOLEPSY -->
+    <section id="narcolepsy" class="section">
+      <div class="container">
+        <h2 data-i18n="narcolepsy.title">Narcolepsy</h2>
+        <p class="muted" data-i18n="narcolepsy.soon">Coming soon.</p>
+      </div>
+    </section>
+
+    <!-- TEST -->
+    <section id="test" class="section">
+      <div class="container">
+        <h2 id="test-title" data-i18n="test.title">Test yourself</h2>
+        <p class="muted" data-i18n="test.subtitle">Swiss Narcolepsy Scale (SNS) · about 2 minutes</p>
+
+        <div id="quiz-panel" class="panel">
+          <div class="progress">
+            <p id="progress-text" class="progress-text" aria-live="polite">1 / 5</p>
+            <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+              <span id="progress-fill"></span>
+            </div>
+          </div>
+
+          <div id="quiz-viewport" class="viewport">
+            <div id="quiz-track" class="track"></div>
+          </div>
+
+          <div class="quiz-nav">
+            <button type="button" id="prev-btn" class="btn btn-ghost" data-i18n="test.prev">← Back</button>
+            <button type="button" id="next-btn" class="btn">Next →</button>
+          </div>
+          <p class="muted tip" data-i18n="test.tip">Answer with keys 1–5, move with the arrow keys, or swipe left and right.</p>
+        </div>
+
+        <div id="result-panel" class="panel" hidden>
+          <div class="scratch-card">
+            <div id="result-content" class="scratch-content"></div>
+            <canvas id="scratch" aria-hidden="true"></canvas>
+          </div>
+          <p id="scratch-hint" class="muted center" data-i18n="result.hint">Scratch with your finger or mouse to see the result.</p>
+          <div class="center">
+            <button type="button" id="skip-scratch" class="btn btn-ghost" data-i18n="result.skip">Show without scratching</button>
+          </div>
+
+          <div id="result-actions" class="result-actions" hidden>
+            <div class="row">
+              <button type="button" id="print-btn" class="btn" data-i18n="result.pdf">Save as PDF</button>
+              <a class="btn btn-ghost" data-share-whatsapp data-i18n="share.button">Share on WhatsApp</a>
+            </div>
+            <p class="muted tip" data-i18n="result.pdfTip">In the window that opens, choose "Save as PDF" as the destination. You get a summary of your answers you can take to a doctor.</p>
+            <div class="row">
+              <button type="button" id="edit-btn" class="btn btn-ghost" data-i18n="result.edit">Edit answers</button>
+              <button type="button" id="restart-btn" class="btn btn-ghost" data-i18n="result.restart">Start over</button>
+            </div>
+          </div>
+
+          <div id="print-summary" class="print-summary"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="footer"></footer>
+
+  <noscript><p class="container">JavaScript is required for the test.</p></noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
