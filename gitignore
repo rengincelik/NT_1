@@ -1,0 +1,25 @@
+# İşletim sistemi
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editör
+.vscode/
+.idea/
+*.swp
+*~
+
+# Gizli ayarlar / yerel dosyalar
+.env
+.env.*
+*.local
+
+# Araç çıktıları (ileride paket yöneticisi ya da test aracı eklenirse)
+node_modules/
+npm-debug.log*
+test-results/
+playwright-report/
+
+# Geçici dosyalar
+*.log
+*.tmp
