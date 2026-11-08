@@ -3,7 +3,6 @@ import { QUIZ } from "./config.js";
 import { initI18n } from "./i18n.js";
 import { initLangSwitch } from "./langswitch.js";
 import { initSite } from "./site.js";
-import { initNav } from "./nav.js";
 import { initShare } from "./share.js";
 import { createQuiz } from "./quiz.js";
 import { createResult } from "./result.js";
@@ -16,7 +15,6 @@ await initI18n();
 
 initLangSwitch();
 initSite();
-initNav();
 initShare();
 initRichText();
 initStats(); // beklenmez: sayılar gelince kutu kendi kendine açılır
