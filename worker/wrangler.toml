@@ -1,0 +1,13 @@
+name = "narkolepsi-tally"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+
+[vars]
+# POST'a izin verilen siteler, virgülle ayrılmış, sonunda "/" olmadan.
+# Yayın adresini (GitHub Pages ya da kendi alan adın) buraya ekle.
+ALLOWED_ORIGINS = "http://localhost:8000,http://127.0.0.1:8000"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "narkolepsi-tally"
+database_id = "BURAYA-D1-VERITABANI-ID"
