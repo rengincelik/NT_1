@@ -39,17 +39,47 @@ export default {
 
   // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
   // Aşağıdakiler GEÇİCİ metindir.
-  narcolepsy: {
-    title: "Narkolepsi",
-    body: [
-      "## Geçici başlık",
-      "Bu, narkolepsi bölümü için geçici metindir. Kendi yazınla değiştir. Kaynak göstermek için anahtarını köşeli parantez içinde @ işaretiyle yaz, şöyle.[@placeholder-1]",
-      "Aynı anahtar tekrar kullanılabilir ve numarasını korur.[@placeholder-1] Farklı bir anahtar bir sonraki numarayı alır.[@placeholder-2]",
-      "## Başka bir geçici başlık",
-      "İki diyez ile başlayan satırlar başlık olur. Geri kalan her şey paragraftır.",
-      "Metin kutudan uzun olunca bu kutu kaydırılır. İstediğin kadar paragraf ekleyebilirsin.",
-    ],
-  },
+	narcolepsy: {
+		title: "Narkolepsi",
+		body: [
+			"Narkolepsi, beynin uyku-uyanıklık döngüsünü düzgün düzenleyememesine bağlı, kronik nörolojik bir aşırı uykululuk hastalığıdır.[@scammell2015][@bassetti2021] Genellikle ergenlikte ya da genç yetişkinlikte başlar ve ömür boyu sürer.[@dauvilliers2007]",
+			"Kataplektik narkolepsi dünyada yetişkinlerin yaklaşık %0,02'sini, yani yaklaşık 2.000 kişide 1'ini etkiler.[@dauvilliers2007] Belirtiler çoğu zaman narkolepsi olarak tanınmaz ve çalışmalar tanıya kadar geçen ortalama sürenin 15 yıla kadar çıkabildiğini bildirir.[@thorpy2014]",
+
+			"## Nedeni",
+			"Tip 1 narkolepsinin ayırt edici özelliği, hipotalamusun lateral bölgesindeki oreksin (hipokretin) üreten sinir hücrelerinin kaybıdır.[@nishino2000][@thannickal2000] En olası açıklama otoimmün bir süreçtir.[@dauvilliers2007][@bassetti2021]",
+			"Genetik yatkınlık: kataplektik narkolepsisi olanların neredeyse tamamı HLA-DQB1*06:02 aleline sahiptir.[@mignot2001]",
+			"Çevresel tetikleyiciler: şimdiye kadar saptanan en güçlü çevresel risk, hem enfeksiyon hem aşı yoluyla influenza A (H1N1)'dir.[@bonvalet2017]",
+
+			"## Beş belirti",
+			"Narkolepsi, gece uykusunun bölünmesini de içeren beş belirtiyle (pentad) tanımlanır.[@dauvilliers2007]",
+			"1. Aşırı gündüz uykululuğu. Her hastada vardır: sürekli uykulu olma ve gün boyunca karşı konulamaz uyku atakları.[@scammell2015]",
+			"2. Katapleksi. Kahkaha, heyecan ya da öfke gibi güçlü duyguların tetiklediği, bilinç açıkken ani ve kısa süreli kas gücü kaybı.[@sturzenegger2004]",
+			"3. Uyku felci. Uykuya dalarken ya da uyanırken geçici olarak hareket edememe veya konuşamama.[@dauvilliers2007]",
+			"4. Hipnagojik / hipnopompik halüsinasyonlar. Uykuya dalarken ya da uyanırken yaşanan canlı, çoğu zaman korkutucu algılar.[@dauvilliers2007]",
+			"5. Bölünen gece uykusu. Gündüz uykulu olunmasına rağmen gece sık hareket etme ve sık uyanma.[@dauvilliers2007]",
+
+			"## Türleri",
+			"Uluslararası Uyku Bozuklukları Sınıflaması (3. baskı) iki tür ayırır.[@aasm2014][@sateia2014]",
+			"Tip 1 (NT1): katapleksi vardır ya da beyin-omurilik sıvısında (BOS) hipokretin-1 düzeyi düşüktür (110 pg/mL veya altı).",
+			"Tip 2 (NT2): katapleksi yoktur, BOS hipokretin-1 düzeyi normaldir ya da ölçülmemiştir.",
+
+			"## Tanı nasıl konur",
+			"Kesin tanı, kapsamlı bir klinik ve laboratuvar değerlendirmesi gerektirir.[@aasm2014]",
+			"Gece polisomnografisi (PSG), gece uykusunun yapısına bakar ve obstrüktif uyku apnesi gibi diğer nedenleri dışlar.",
+			"Çoklu Uyku Latansı Testi (MSLT), uykuya ne kadar hızlı daldığınızı (ortalama 8 dakika veya daha kısa) ve uykuya dalıştan hemen sonra REM uykusunun başlayıp başlamadığını (iki veya daha fazla uyku başlangıcı REM dönemi) ölçer.[@aasm2014][@littner2005]",
+			"Bu sitedeki test olan İsviçre Narkolepsi Ölçeği (SNS), Tip 1 narkolepsi için kullanılan, beş soruluk kısa bir tarama aracıdır ve soruları yukarıdaki beş belirtiyi kapsar. Farklı toplumlarda yapılan çalışmalar, Tip 1 narkolepsiyi diğer uykululuk nedenlerinden yüksek duyarlılık ve özgüllükle ayırdığını göstermiştir.[@sturzenegger2004][@sturzenegger2018][@bargiotas2019] Ölçeğin Türkçe sürümünün geçerlik ve güvenirliği gösterilmiştir.[@demir2023] Tip 2'yi saptayamaz ve bir tarama aracı tanının yerini tutmaz.[@bargiotas2019]",
+			"BOS hipokretin-1 ölçümü, Tip 1 narkolepsi için altın standart biyobelirteçtir.[@nishino2000]",
+
+			"## Tedavi",
+			"Tedavi, ilaçları davranışsal önlemlerle birleştirir ve genellikle ömür boyu sürdürülmesi gerekir.[@bassetti2021]",
+			"Planlı gündüz şekerlemeleri ve çeşitli ilaçlar uykululuğu azaltır, başka ilaçlar da katapleksiyi azaltır. Seçim kişinin belirtilerine bağlıdır ve bir uzman tarafından yapılır.[@bassetti2021]",
+			"Oreksin reseptör agonistleri, doğrudan hipokretin eksikliğini hedefleyen yeni bir yaklaşımdır. Ağustos 2026'da FDA, oral bir oreksin reseptör-2 (OX2R) agonisti olan oveporexton'u (Orzeyful) yetişkinlerde Tip 1 narkolepsi için onayladı. Oreksin sinyalinin kaybını doğrudan hedefleyen ilk ilaçtır.[@fda2026]",
+
+			"## Sonra ne yapmalı",
+			"Bu belirtiler size tanıdık geliyorsa bir nöroloji ya da uyku tıbbı uzmanına başvurun. Uykululuğunuzun, kas güçsüzlüğünüzün ve uyku sorunlarınızın ne zaman olduğunu ve kullandığınız ilaçları not edip yanınızda götürün.",
+			"Hiçbir ilacı kendi kendinize başlamayın, bırakmayın ya da değiştirmeyin. Tarama testi yalnızca ilk adımdır.",
+		],
+	},
 
   test: {
     title: "Kendini test et",

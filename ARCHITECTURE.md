@@ -29,7 +29,7 @@ js/
   site.js           footer render
   nav.js            scroll ile menü vurgusu
   share.js          WhatsApp linki
-  stats.js          sayaç: görüntülenme / tamamlanan test (GoatCounter)
+  stats.js          sayaç: Worker'a sayım + sayıları okuma, GoatCounter'a arka plan sayımı
   richtext.js       alıntılı metin ([@anahtar]), kaynak listesi
   references.js     kaynak kayıtları (REFERENCES)
   quiz.js           adım adım test
@@ -39,6 +39,11 @@ js/
   locales/
     en.js           varsayılan dil, tüm metinler
     tr.js
+worker/             sayaç Worker'ı (siteden ayrı yayınlanır, Cloudflare Workers + D1)
+  src/index.js      API
+  schema.sql        D1 tablosu
+  wrangler.toml     Worker ayarı (izinli siteler, D1 bağlantısı)
+  README.md         yayınlama adımları
 ```
 
 CSS yükleme sırası (`index.html`): `base` → `background` → `layout` → `components` → `print`.
@@ -209,16 +214,33 @@ Döndürür: `{ reset(), revealNow(), relabel() }`.
 - `langswitch.js`: `LANGUAGES`'tan bayrak butonları üretir (`<button><img></button>`, `aria-label` = dilin kendi adı, `aria-pressed` = aktif dil).
 
 ### `stats.js` (sayaç)
-Dışa aktarır: `statsEnabled`, `initStats()`, `trackTestCompleted()`. Ayar: `config.js > STATS = { goatcounterCode, paths: { view, testDone } }`.
+Dışa aktarır: `statsEnabled`, `initStats()`, `trackTestCompleted()`.
+Ayar: `config.js > STATS = { workerUrl, goatcounterCode, paths: { view, testDone } }`.
 
-- `goatcounterCode` boşsa (`statsEnabled === false`) hiçbir istek atılmaz, `#stats` gizli kalır, footer'a `statsNote` eklenmez.
-- **Sayma (yazma):** `new Image().src = https://<kod>.goatcounter.com/count?p=<yol>&rnd=<rastgele>`. Yalnızca iki yol gönderilir: `/` (sayfa açılışı) ve `/test-completed` (test bitti). Cevap, skor, dil, referrer, başlık gönderilmez. Üçüncü taraf script yok.
-- Test tamamlanması GoatCounter'da sanal sayfa görüntülemesi olarak tutulur (olay sayacı belgelenmediği için). Sayfa yüklemesi başına en fazla bir kez gönderilir.
-- **Sayılmayan ziyaretler** (`shouldTrack`): `localhost` / `127.0.0.1` / `file://`, `navigator.doNotTrack === "1"`, `navigator.globalPrivacyControl`, `localStorage.skipgc` dolu olan tarayıcı (kendi ziyaretini saymamak için `localStorage.setItem("skipgc","t")`).
-- **Okuma:** `GET https://<kod>.goatcounter.com/counter/<encodeURIComponent(yol)>.json`. Yanıtta `count` binlik ayraçlı string, rakam dışı karakterler atılıp sayıya çevrilir. 404 = 0. Okuma, sayma kuralından bağımsızdır (localhost'ta da okur).
-- Hata (403, ağ, bozuk yanıt) ya da iki sayı da 0 ise kutu gösterilmez, sayfa çalışmaya devam eder.
+İki bağımsız parça vardır:
+
+| | Görevi | Ayar | Boşsa |
+|---|---|---|---|
+| **Worker** (`worker/`) | Home'daki sayıların kaynağı ve asıl sayım | `workerUrl` | sayı kutusu görünmez, Worker'a istek gitmez |
+| **GoatCounter** | Arka planda ek sayım. Sayılar bundan **okunmaz** | `goatcounterCode` | hiçbir istek gitmez |
+
+- `statsEnabled` = ikisinden biri doluysa `true`. `site.js` buna bakıp footer'a `footer.statsNote` ekler.
+- **Sayılmayan ziyaretler** (`shouldTrack`, iki parça için de geçerli): `localhost` / `127.0.0.1` / `file://`, `navigator.doNotTrack === "1"`, `navigator.globalPrivacyControl`, `localStorage.skipgc` dolu olan tarayıcı (kendi ziyaretini saymamak için `localStorage.setItem("skipgc","t")`). Sayılmayan ziyaretçi sayıları yine de görür (sadece okuma).
+- **Sayfa açılışı:** Sayılan ziyarette tek istek: `POST <workerUrl>/tally/view` (artırır ve güncel `{views, tests}` döndürür). Sayılmayan ziyarette `GET <workerUrl>/tally`. Ek olarak GoatCounter doluysa `new Image().src = https://<kod>.goatcounter.com/count?p=/&rnd=...`.
+- **Test bitişi:** `trackTestCompleted()` sayfa yüklemesi başına en fazla bir kez: `POST <workerUrl>/tally/test` (dönen sayılarla kutu güncellenir) ve GoatCounter'a `p=/test-completed`. Cevapları düzenleyip yeniden bitirmek tekrar saymaz.
+- **Gönderilen veri:** yalnızca "sayfa açıldı" / "test bitti" olayı. Cevap, skor, dil, referrer, başlık gönderilmez. Worker'a giden istekte gövde ve özel başlık yoktur (CORS ön isteği gerekmez).
+- **Hata** (ağ, 403, bozuk yanıt): konsola uyarı yazılır, kutu gizli kalır, sayfa çalışmaya devam eder. İki sayı da 0 ise kutu gösterilmez.
 - Sayılar `Intl.NumberFormat(t("meta.dateLocale"))` ile yazılır, dil değişince yeniden yazılır.
-- GoatCounter tarafı: site ayarlarında "Allow adding visitor counts on your website" açık olmalı (varsayılan kapalı). Sayaç yanıtları en fazla 4 saat önbelleklenir, sayılar gecikmeli güncellenir.
+
+### `worker/` (sayaç API'si)
+Cloudflare Worker + D1. Site dosyalarından bağımsız yayınlanır (`worker/README.md`).
+
+- `GET /tally` → `{ "views": n, "tests": n }`
+- `POST /tally/view` ve `POST /tally/test` → ilgili sayaç +1, güncel sayıları döndürür. Artırma `INSERT ... ON CONFLICT DO UPDATE SET n = n + 1` ile tek `batch` içinde yapılır, eşzamanlı isteklerde sayı kaybolmaz.
+- Veri: `counters(name TEXT PRIMARY KEY, n INTEGER)` tablosu, iki satır (`views`, `tests`). IP, kimlik, cevap saklanmaz.
+- **Origin filtresi:** `POST` yalnızca `Origin` başlığı `wrangler.toml > ALLOWED_ORIGINS` listesindeyse kabul edilir, aksi halde 403. İzinli origin `Access-Control-Allow-Origin` ile geri yansıtılır, izinsiz origin yanıtı tarayıcıdan okuyamaz. Bu bir güvenlik önlemi değil, tesadüfi ve başka siteden gelen artırmaları engelleyen filtredir: `Origin` başlığını taklit eden biri sayıyı artırabilir. IP başına sınır yoktur.
+- Rota adları (`/tally`) reklam engelleyici listelerinde sık geçen sözcüklerden bilerek kaçınır. Engellenme olursa kendi alan adına bağlı Worker rotası en sağlam çözümdür.
+- Cloudflare ücretsiz plan limitleri: günde 100.000 Worker isteği, D1'de günde 100.000 satır yazma. Limit aşılırsa istekler hata verir, site bozulmaz (kutu gizlenir).
 
 ### `richtext.js` + `references.js` (alıntılar)
 Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar: { text, url? } }` (dilden bağımsız).
@@ -290,8 +312,11 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 | Yeni yerelleştirilen HTML metni | elemana `data-i18n="anahtar"` + tüm dil dosyalarına anahtar |
 | Menü/header düzeni | `layout.css` (`--header-h`, `36rem` breakpoint) |
 | PDF çıktısı | `print.css` + `result.js > renderSummary` (yeni bölüm eklenirse `print.css` gizleme listesine de ekle) |
-| Sayacı açma / kapama | `config.js > STATS.goatcounterCode` (boş = kapalı) |
-| Sayılan yollar | `config.js > STATS.paths` |
+| Sayı kutusunu açma / kapama | `config.js > STATS.workerUrl` (boş = kapalı) |
+| GoatCounter arka plan sayımını açma / kapama | `config.js > STATS.goatcounterCode` (boş = kapalı) |
+| GoatCounter'a giden yollar | `config.js > STATS.paths` |
+| Worker'a izin verilen siteler | `worker/wrangler.toml > ALLOWED_ORIGINS` (sonra Worker'ı yeniden yayınla) |
+| Yeni sayaç ekleme | `worker/src/index.js > COUNTERS`, `worker/schema.sql`, `stats.js`, sayfada gösterim |
 | Home içeriği | `index.html > #home` + `locales/*.js > home` |
 | Sayacın gösterdiği etiketler | `locales/*.js > home.views`, `home.tests` |
 | Kaynak ekleme | `references.js > REFERENCES`, metinde `[@anahtar]` |

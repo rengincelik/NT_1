@@ -45,7 +45,8 @@ Metinler `js/locales/en.js` ve `js/locales/tr.js` içinde. `data-i18n` ile bağl
 - [ ] **Skorlama**: `config.js > SCORING` içine makaledeki katsayıları ve eşiği ekle, kaynağı koda yorum olarak yaz. Sonra `scoring.js` için birim testi (sınır değerleri: eşiğin tam üstü, tam altı, tüm 0, tüm maksimum).
 - [ ] **Paylaşım önizlemesi**: `index.html` içine Open Graph ve Twitter etiketleri, önizleme görseli. WhatsApp'ta link tıklama oranını doğrudan etkiler. Not: tarayıcı botları `?lang=` göremeyeceği için önizleme tek dilli olur, hangi dilde olacağına karar ver.
 - [ ] **Favicon** ve `theme-color`.
-- [ ] **Sayacı canlıya bağla** (kod hazır, kapalı): GoatCounter'da site aç → kodu `config.js > STATS.goatcounterCode`'a yaz → site ayarlarında "Allow adding visitor counts on your website" seçeneğini aç. Yayında şunları doğrula, çünkü yalnızca sahte sunucuyla test edildi: (1) ziyaret ve test bitirme GoatCounter panelinde görünüyor (`/` ve `/test-completed`), (2) `/counter/%2F.json` tarayıcıdan CORS hatasız okunuyor, (3) Home'daki sayılar geliyor (sayaç yanıtı 4 saate kadar önbelleklenir, gecikme normal). Kendi tarayıcında `localStorage.setItem("skipgc","t")` çalıştır.
+- [ ] **Sayaç Worker'ını yayınla** (kod hazır ve yerelde test edildi, `worker/README.md`): D1 oluştur, `wrangler.toml > database_id` ve `ALLOWED_ORIGINS` (yayın adresin) doldur, `wrangler deploy`, çıkan adresi `config.js > STATS.workerUrl`'a yaz. Yayında doğrula: Home'da sayılar geliyor, test bitirince "tamamlanan test" artıyor. Kendi tarayıcında `localStorage.setItem("skipgc","t")` çalıştır.
+- [ ] **Reklam engelleyici testi**: Worker yayında uBlock Origin / AdGuard / Brave kalkanı açıkken sayfayı aç, `workers.dev` isteği engelleniyor mu bak. Engelleniyorsa sayılar düşük kalır, çözüm: Worker'ı kendi alan adına bağlamak (`stats` benzeri alt alan adı yerine nötr bir ad).
 - [ ] **Yayına alma**: GitHub Pages veya Netlify, alan adı kararı, HTTPS kontrolü.
 - [ ] **QR kartı**: Dağıtımda kullanılacak QR kodu ve basılacak kartın tasarımı (QR'ı link kesinleşince üret, kısa ve `?lang=tr` içeren sürümünü kullan).
 - [ ] **Gerçek cihaz testi**: iOS Safari ve Android Chrome. Kazı-kazan dokunma, kaydırma, `window.print()`, header iki satır düzeni.
@@ -66,8 +67,9 @@ Metinler `js/locales/en.js` ve `js/locales/tr.js` içinde. `data-i18n` ile bağl
 - [ ] **Manuel tema anahtarı** (açık/koyu): Şu an yalnızca sistem ayarını izliyor.
 - [ ] **Test ilerlemesini saklama**: Sayfa yenilenince cevaplar kaybolur. `sessionStorage` ile saklamak mümkün ama gizlilik cümlesiyle çelişmemeli (cihazdan çıkmıyor, sekme kapanınca siliniyor).
 - [ ] **Çevrimdışı kullanım**: Service worker ile. Sayfa tamamen statik olduğu için kolay.
-- [ ] **Sayaç dışında analitik**: Kaynak (referrer), cihaz, ülke gibi veriler istenirse GoatCounter'ın kendi `count.js` scriptine geçmek gerekir (şu an üçüncü taraf script yok, referrer gönderilmiyor). Bu karar `footer.statsNote`'u ve gizlilik cümlelerini etkiler.
-- [ ] **İstatistik kutusu eşiği**: Sayılar çok düşükken (ilk günler) kutu kötü görünebilir. `stats.js`'e "en az N görüntülenme olunca göster" eşiği eklenebilir. Şu an yalnızca ikisi de 0 ise gizleniyor.
+- [ ] **GoatCounter'ın geleceği**: Şu an yalnızca arka planda sayım yapıyor, sayılar Worker'dan geliyor. Panel verisi (referrer, cihaz) istenirse GoatCounter'ın kendi `count.js` scriptine geçmek gerekir (şu an üçüncü taraf script yok, referrer gönderilmiyor), bu `footer.statsNote`'u etkiler. İstenmezse `goatcounterCode`'u boşaltmak yeter.
+- [ ] **Worker'da kötüye kullanım sınırı**: IP başına sınır yok, `Origin` başlığını taklit eden biri sayıyı artırabilir. Sorun olursa Cloudflare'ın ücretsiz hız sınırlama kuralı ya da Worker içinde basit bir sınır eklenebilir.
+- [ ] **İstatistik kutusu eşiği**: Sayılar çok düşükken (ilk günler, reklam engelleyici etkisi) kutu kötü görünebilir. `stats.js > render`'a "en az N görüntülenme olunca göster" eşiği eklenebilir. Şu an yalnızca ikisi de 0 ise gizleniyor.
 - [ ] **Otomatik test**: Bu oturumdaki Playwright senaryosunu (dil değişimi, test akışı, sonuç, `?lang=`) repo içine al, CI'da çalıştır.
 - [ ] **Narkolepsi bölümünü alt sayfalara / kartlara bölme**: İçerik uzarsa.
 

@@ -38,16 +38,46 @@ export default {
   },
 
   // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
-  // Aşağıdakiler GEÇİCİ metindir.
   narcolepsy: {
     title: "Narcolepsy",
     body: [
-      "## Placeholder heading",
-      "This is placeholder text for the narcolepsy section. Replace it with your own writing. To cite a source, put its key in square brackets with an @ sign, like this.[@placeholder-1]",
-      "The same key can be used again and keeps its number.[@placeholder-1] A different key gets the next number.[@placeholder-2]",
-      "## Another placeholder heading",
-      "Lines that start with two hash marks become headings. Everything else is a paragraph.",
-      "This box scrolls when the text is taller than the box. Add as many paragraphs as you need.",
+      "Narcolepsy is a chronic neurological disorder of hypersomnolence in which the brain cannot properly regulate the sleep-wake cycle.[@scammell2015][@bassetti2021] It usually begins in the teenage years or young adulthood and stays for life.[@dauvilliers2007]",
+      "Narcolepsy with cataplexy affects roughly 0.02% of adults worldwide, about 1 in 2,000.[@dauvilliers2007] Symptoms are often not recognized as narcolepsy, and studies report an average delay of up to 15 years before the diagnosis is made.[@thorpy2014]",
+
+      "## Cause",
+      "The hallmark of Type 1 narcolepsy is the loss of orexin (hypocretin) neurons in the lateral hypothalamus.[@nishino2000][@thannickal2000] The most likely explanation is an autoimmune process.[@dauvilliers2007][@bassetti2021]",
+      "Genetic susceptibility: almost all people with narcolepsy with cataplexy carry the HLA-DQB1*06:02 allele.[@mignot2001]",
+      "Environmental triggers: the strongest environmental risk identified so far is influenza A (H1N1), through both infection and vaccination.[@bonvalet2017]",
+
+      "## The five symptoms",
+      "Narcolepsy is described by a symptom pentad, which includes fragmented night sleep.[@dauvilliers2007]",
+      "1. Excessive daytime sleepiness. Present in every patient: constant sleepiness and irresistible sleep attacks during the day.[@scammell2015]",
+      "2. Cataplexy. A sudden, brief loss of muscle tone triggered by strong emotions such as laughter, excitement or anger, while you stay conscious.[@sturzenegger2004]",
+      "3. Sleep paralysis. Being temporarily unable to move or speak while falling asleep or waking up.[@dauvilliers2007]",
+      "4. Hypnagogic / hypnopompic hallucinations. Vivid, often frightening experiences at sleep onset or on waking.[@dauvilliers2007]",
+      "5. Disrupted night sleep. Frequent movement and awakenings during the night, even though you are sleepy during the day.[@dauvilliers2007]",
+
+      "## Types",
+      "The International Classification of Sleep Disorders (3rd edition) separates two types.[@aasm2014][@sateia2014]",
+      "Type 1 (NT1): cataplexy is present, or the hypocretin-1 level in cerebrospinal fluid (CSF) is low (110 pg/mL or less).",
+      "Type 2 (NT2): no cataplexy, and CSF hypocretin-1 is normal or has not been measured.",
+
+      "## How it is diagnosed",
+      "A formal diagnosis needs a full clinical and laboratory work-up.[@aasm2014]",
+      "Overnight polysomnography (PSG) looks at the structure of night sleep and rules out other causes, such as obstructive sleep apnea.",
+      "The Multiple Sleep Latency Test (MSLT) measures how quickly you fall asleep (an average of 8 minutes or less) and whether REM sleep starts within minutes of sleep onset (two or more sleep-onset REM periods).[@aasm2014][@littner2005]",
+      "The Swiss Narcolepsy Scale (SNS), the test on this site, is a short five-question screening tool for Type 1 narcolepsy, and its questions cover the five symptoms above. Several studies in different populations found that it separates Type 1 narcolepsy from other causes of sleepiness with high sensitivity and specificity.[@sturzenegger2004][@sturzenegger2018][@bargiotas2019] A Turkish version has been validated.[@demir2023] It does not detect Type 2, and a screening tool does not replace a diagnosis.[@bargiotas2019]",
+      "CSF hypocretin-1 measurement is the gold-standard biomarker for Type 1 narcolepsy.[@nishino2000]",
+
+      "## Treatment",
+      "Treatment combines medication with behavioral measures and usually has to continue for life.[@bassetti2021]",
+      "Scheduled daytime naps and several medicines reduce sleepiness, and other medicines reduce cataplexy. The choice depends on your symptoms and is made by a specialist.[@bassetti2021]",
+      "Orexin receptor agonists are a newer approach aimed directly at the hypocretin deficiency. In August 2026 the FDA approved oveporexton (Orzeyful), an oral orexin receptor-2 (OX2R) agonist, for adults with Type 1 narcolepsy. It is the first medicine designed to target the loss of orexin signaling itself.[@fda2026]",
+
+      "## What to do next",
+      "If these symptoms sound familiar, see a neurologist or a sleep medicine specialist. Write down when your sleepiness, muscle weakness and sleep problems happen and which medicines you take, and bring the note with you.",
+      "Do not start, stop or change any medicine on your own. A screening test is only a first step.",
+		"This test only looks for Type 1 narcolepsy. Sleepiness has many other causes, such as sleep apnea or not getting enough sleep, and a sleep clinic can look at all of them.",
     ],
   },
 

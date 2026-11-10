@@ -1,50 +1,60 @@
-// İstatistikler (GoatCounter): görüntülenme ve tamamlanan test sayısı.
-// STATS.goatcounterCode boşsa tamamen kapalı: hiçbir istek atılmaz, kutu görünmez.
+// Sayaç: görüntülenme ve tamamlanan test sayısı.
 //
-// Ne gönderilir: sadece iki sayfa yolu ("/" ve "/test-completed"). Cevaplar, skor, dil gönderilmez.
-// Test tamamlanması, GoatCounter'da sanal bir sayfa görüntülemesi olarak sayılır.
+// Gösterilen sayılar ve asıl sayım: kendi Worker'ımız (worker/ klasörü). STATS.workerUrl boşsa kutu görünmez.
+// GoatCounter (isteğe bağlı, arka planda): STATS.goatcounterCode doluysa sadece sayım gönderilir, sayılar buradan OKUNMAZ.
+//
+// Ne gönderilir: sayfa açılışı ve test bitişi olayı. Cevaplar, skor, dil, referrer gönderilmez.
 import { STATS } from "./config.js";
 import { t, onLangChange } from "./i18n.js";
 
-const code = (STATS.goatcounterCode || "").trim();
-const base = `https://${code}.goatcounter.com`;
+const workerUrl = (STATS.workerUrl || "").trim().replace(/\/+$/, "");
+const gcCode = (STATS.goatcounterCode || "").trim();
+const gcBase = `https://${gcCode}.goatcounter.com`;
 
-export const statsEnabled = Boolean(code);
+// Footer'daki "anonim sayılır" notu için: herhangi bir sayım açıksa true
+export const statsEnabled = Boolean(workerUrl || gcCode);
 
 let counts = null;
 let completedSent = false;
 
 // Geliştirme ortamı, DNT/GPC açık ziyaretçi ve kendi tarayıcın (localStorage.skipgc) sayılmaz.
 function shouldTrack() {
-  if (!statsEnabled) return false;
-  //if (["", "localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return false;
-  //if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl) return false;
+  if (["", "localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return false;
+  if (navigator.doNotTrack === "1" || navigator.globalPrivacyControl) return false;
   try {
     if (localStorage.getItem("skipgc")) return false;
   } catch { /* özel pencere vb. */ }
   return true;
 }
 
-function hit(path) {
-  if (!shouldTrack()) return;
+// --- GoatCounter (sadece sayım, arka planda) ---
+function gcHit(path) {
+  if (!gcCode || !shouldTrack()) return;
   const params = new URLSearchParams({ p: path, rnd: String(Math.random()).slice(2) });
-  new Image().src = `${base}/count?${params}`; // 1x1 GIF döner, yanıt okunmaz
+  new Image().src = `${gcBase}/count?${params}`; // 1x1 GIF döner, yanıt okunmaz
 }
 
-// Herkese açık sayaç. Yanıtta count binlik ayraçlı bir string ("1 234"). Bilinmeyen yol için 404 = 0.
-async function fetchCount(path) {
-  const res = await fetch(`${base}/counter/${encodeURIComponent(path)}.json`);
-  if (res.status === 404) return 0;
+// --- Worker ---
+// GET = sadece oku, POST = bir artır ve güncel sayıları al
+async function callWorker(method, path) {
+  const res = await fetch(`${workerUrl}${path}`, {
+    method,
+    cache: "no-store",
+    keepalive: method === "POST",
+  });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
-  const n = parseInt(String(data.count).replace(/\D/g, ""), 10);
-  if (!Number.isFinite(n)) throw new Error("beklenmeyen yanıt");
-  return n;
+  const views = Number(data.views);
+  const tests = Number(data.tests);
+  if (!Number.isFinite(views) || !Number.isFinite(tests)) throw new Error("beklenmeyen yanıt");
+  return { views, tests };
 }
 
 function render() {
   const box = document.getElementById("stats");
   if (!box || !counts) return;
+  // İkisi de 0 ise (yeni kurulum) kutuyu gösterme
+  if (counts.views === 0 && counts.tests === 0) return;
   const fmt = new Intl.NumberFormat(t("meta.dateLocale"));
   document.getElementById("stat-views").textContent = fmt.format(counts.views);
   document.getElementById("stat-tests").textContent = fmt.format(counts.tests);
@@ -54,17 +64,16 @@ function render() {
 export async function initStats() {
   if (!statsEnabled) return;
 
-  hit(STATS.paths.view);
+  gcHit(STATS.paths.view);
+  if (!workerUrl) return;
+
   onLangChange(render);
 
   try {
-    const [views, tests] = await Promise.all([
-      fetchCount(STATS.paths.view),
-      fetchCount(STATS.paths.testDone),
-    ]);
-    // İkisi de 0 ise (yeni site ya da yanlış ayar) kutuyu gösterme
-    // if (views === 0 && tests === 0) return;
-    counts = { views, tests };
+    // Sayılan ziyarette tek istek hem artırır hem sayıları getirir. Sayılmayan ziyarette (localhost, DNT, skipgc) sadece okunur.
+    counts = shouldTrack()
+      ? await callWorker("POST", "/tally/view")
+      : await callWorker("GET", "/tally");
     render();
   } catch (err) {
     console.warn("İstatistikler alınamadı, kutu gizli kalıyor:", err.message);
@@ -75,5 +84,12 @@ export async function initStats() {
 export function trackTestCompleted() {
   if (completedSent) return;
   completedSent = true;
-  hit(STATS.paths.testDone);
+
+  gcHit(STATS.paths.testDone);
+
+  if (workerUrl && shouldTrack()) {
+    callWorker("POST", "/tally/test")
+      .then((c) => { counts = c; render(); })
+      .catch((err) => console.warn("Test sayısı gönderilemedi:", err.message));
+  }
 }
