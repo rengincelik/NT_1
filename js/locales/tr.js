@@ -42,7 +42,7 @@ export default {
   // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
 
 	narcolepsy: {
-		title: "Narkolepsi",
+		title: "Narkolepsi",tocLabel: "Bölümler",
 		body: [
 			"Narkolepsi, beynin uyku-uyanıklık döngüsünü düzgün düzenleyememesine bağlı, kronik nörolojik bir aşırı uykululuk hastalığıdır.[@scammell2015][@bassetti2021] Genellikle ergenlikte ya da genç yetişkinlikte başlar ve ömür boyu sürer.[@dauvilliers2007]",
 			"Kataplektik narkolepsi dünyada yetişkinlerin yaklaşık %0,02'sini, yani yaklaşık 2.000 kişide 1'ini etkiler.[@dauvilliers2007] Belirtiler çoğu zaman narkolepsi olarak tanınmaz ve çalışmalar tanıya kadar geçen ortalama sürenin 15 yıla kadar çıkabildiğini bildirir.[@thorpy2014]",

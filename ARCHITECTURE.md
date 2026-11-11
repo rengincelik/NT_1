@@ -316,6 +316,7 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 - **Tıklama:** numaraya tıklayınca adres değişmeden kutu içinde ilgili kaynağa kaydırılır, kaynak kısa süre vurgulanır (`.flash`). `prefers-reduced-motion` altında animasyonsuz.
 - Dil değişince (`onLangChange`) tüm kutular yeniden çizilir. HTML içindeki İngilizce metin yalnızca JS yüklenmeden önceki yedektir.
 - Metin DOM'a `textContent` / `append` ile eklenir, `innerHTML` kullanılmaz.
+- Başlık şeridi: listedeki ## başlıklarından (2 ve üstü) kutunun başına yapışık .toc butonları kurulur. Etiket başlık metnidir, tek dil anahtarı narcolepsy.tocLabel. Tıklayınca kutu içinde başlığa kayar (adres değişmez).
 
 ---
 

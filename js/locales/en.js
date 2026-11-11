@@ -39,7 +39,7 @@ export default {
 
   // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
   narcolepsy: {
-    title: "Narcolepsy",
+    title: "Narcolepsy",tocLabel: "Sections",
     body: [
       "Narcolepsy is a chronic neurological disorder of hypersomnolence in which the brain cannot properly regulate the sleep-wake cycle.[@scammell2015][@bassetti2021] It usually begins in the teenage years or young adulthood and stays for life.[@dauvilliers2007]",
       "Narcolepsy with cataplexy affects roughly 0.02% of adults worldwide, about 1 in 2,000.[@dauvilliers2007] Symptoms are often not recognized as narcolepsy, and studies report an average delay of up to 15 years before the diagnosis is made.[@thorpy2014]",

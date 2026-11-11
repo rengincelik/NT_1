@@ -40,7 +40,37 @@ function appendRich(el, text, cited, blockId) {
   }
   if (last < text.length) el.append(text.slice(last));
 }
+const NO_MOTION = "(prefers-reduced-motion: reduce)";
 
+// Başlık şeridi: kutudaki "## " başlıklarına atlayan, kutunun içinde yapışık butonlar
+function buildToc(block, headings) {
+	block.querySelector(":scope > .toc")?.remove();
+	if (headings.length < 2) return; // başlığı olmayan kutuda (Hakkımda) şerit çizilmez
+
+	const toc = document.createElement("div");
+	toc.className = "toc";
+	toc.setAttribute("role", "group");
+	toc.setAttribute("aria-label", t("narcolepsy.tocLabel"));
+
+	for (const { node, label } of headings) {
+		const btn = document.createElement("button");
+		btn.type = "button";
+		btn.className = "toc-btn";
+		btn.textContent = label;
+		btn.addEventListener("click", () => scrollToHeading(block, toc, node));
+		toc.appendChild(btn);
+	}
+	block.prepend(toc);
+}
+
+function scrollToHeading(block, toc, node) {
+	const reduce = window.matchMedia(NO_MOTION).matches;
+	// Yapışık şerit başlığı örteceği için yüksekliği çıkarılır
+	const top =
+		node.getBoundingClientRect().top - block.getBoundingClientRect().top +
+		block.scrollTop - toc.offsetHeight - 8;
+	block.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+}
 function renderRefs(block, blockId, cited) {
   const box = block.querySelector("[data-refs]");
   if (!box) return;
@@ -81,30 +111,36 @@ function renderRefs(block, blockId, cited) {
 }
 
 function renderBlock(block) {
-  const blockId = block.dataset.richBlock;
-  const cited = new Map();
+	const blockId = block.dataset.richBlock;
+	const cited = new Map();
+	const headings = [];
 
-  // Tek geçişte DOM sırasıyla: numaralar metindeki görünüş sırasına uysun
-  block.querySelectorAll("[data-i18n-rich], [data-i18n-rich-list]").forEach((el) => {
-    if (el.dataset.i18nRich) {
-      el.replaceChildren();
-      appendRich(el, t(el.dataset.i18nRich), cited, blockId);
-      return;
-    }
+	block.querySelectorAll("[data-i18n-rich], [data-i18n-rich-list]").forEach((el) => {
+		if (el.dataset.i18nRich) {
+			el.replaceChildren();
+			appendRich(el, t(el.dataset.i18nRich), cited, blockId);
+			return;
+		}
 
-    const items = get(el.dataset.i18nRichList);
-    const nodes = (Array.isArray(items) ? items : []).map((item) => {
-      const isHeading = /^##\s+/.test(item);
-      const node = document.createElement(isHeading ? "h3" : "p");
-      appendRich(node, isHeading ? item.replace(/^##\s+/, "") : item, cited, blockId);
-      return node;
-    });
-    el.replaceChildren(...nodes);
-  });
+		const items = get(el.dataset.i18nRichList);
+		const nodes = (Array.isArray(items) ? items : []).map((item) => {
+			const isHeading = /^##\s+/.test(item);
+			const node = document.createElement(isHeading ? "h3" : "p");
+			const text = isHeading ? item.replace(/^##\s+/, "") : item;
+			appendRich(node, text, cited, blockId);
+			if (isHeading) {
+				node.id = `${blockId}-s${headings.length + 1}`;
+				// Etiket: başlık metni, varsa [@alıntı] işaretleri atılmış hâliyle
+				headings.push({ node, label: text.replace(TOKEN, "").trim() });
+			}
+			return node;
+		});
+		el.replaceChildren(...nodes);
+	});
 
-  renderRefs(block, blockId, cited);
+	renderRefs(block, blockId, cited);
+	buildToc(block, headings);
 }
-
 // Numaraya tıklayınca sayfa adresi değişmeden kutu içinde kaynağa kaydırır
 function onCiteClick(e) {
   const a = e.target.closest("a.cite");
