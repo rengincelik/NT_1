@@ -123,10 +123,6 @@ export default {
         },
       },
 
-      print: {
-        title: "Narcolepsy screening answers",
-        note: "This summary is not a diagnosis. It is prepared to share with a neurologist or sleep specialist.",
-      },
     },
 
     ess: {
@@ -178,10 +174,6 @@ export default {
         },
       },
 
-      print: {
-        title: "Epworth Sleepiness Scale answers",
-        note: "This summary is not a diagnosis. The ESS measures general daytime sleepiness and does not show its cause. It is prepared to share with a doctor or sleep specialist.",
-      },
 
       copyright: "ESS © MW Johns 1990-1997. Used under License",
     },
@@ -191,8 +183,6 @@ export default {
     cover: "Scratch to reveal",
     hint: "Scratch with your finger or mouse to see the result.",
     skip: "Show without scratching",
-    pdf: "Save as PDF",
-    pdfTip: "In the window that opens, choose \"Save as PDF\" as the destination. You get a summary of your answers you can take to a doctor.",
     edit: "Edit answers",
     restart: "Start over",
     score: "Score: {score} / {max}",

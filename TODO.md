@@ -44,7 +44,7 @@ Metinler `js/locales/en.js` ve `js/locales/tr.js` içinde. Test metinleri `tests
 
 ### P1
 
-- [ ] **Tema kontrolü**: Tema butonu ve iki tema bütün bileşenlerde baştan sona gözle bak (açık/koyu, sistem koyuyken açık seçme ve tersi). Özellikle: yazdırma / PDF özeti koyu temada da beyaz zeminli çıkıyor mu (`print.css`), sonuç ekranında dokunulmamış kazı-kazan kapağı tema değişince eski renkte kalıyor (aşağıda bilinen sorunlar), mobilde header'da bayraklar + buton sığıyor mu.
+- [ ] **Tema kontrolü**: Tema butonu ve iki tema bütün bileşenlerde baştan sona gözle bak (açık/koyu, sistem koyuyken açık seçme ve tersi). Özellikle:, sonuç ekranında dokunulmamış kazı-kazan kapağı tema değişince eski renkte kalıyor (aşağıda bilinen sorunlar), mobilde header'da bayraklar + buton sığıyor mu.
 
 - [ ] **Test başına sayıları gösterme (isteğe bağlı)**: Worker `byTest` döndürüyor, ekranda yalnızca toplam var. İstenirse Home'da ya da test kartında test başına sayı.
 

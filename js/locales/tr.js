@@ -98,7 +98,7 @@ export default {
   tests: {
     sns: {
       name: "İsviçre Narkolepsi Ölçeği (SNS)",
-      subtitle: "İsviçre Narkolepsi Ölçeği (SNS) · yaklaşık 2 dakika",
+      subtitle: "İsviçre Narkolepsi Ölçeği (SNS)",
 
       questions: [
         "Gündüz vakti kendinizi aniden uykuya dalarken buluyor musunuz?",
@@ -125,15 +125,12 @@ export default {
         },
       },
 
-      print: {
-        title: "Narkolepsi ön tarama cevapları",
-        note: "Bu özet bir teşhis değildir. Bir nöroloji veya uyku uzmanıyla paylaşmak için hazırlanmıştır.",
-      },
+
     },
 
     ess: {
       name: "Epworth Uykululuk Ölçeği (ESS)",
-      subtitle: "Epworth Uykululuk Ölçeği (ESS) · yaklaşık 2 dakika",
+      subtitle: "Epworth Uykululuk Ölçeği (ESS)",
 
       // Yönerge ve maddeler lisanslı metindir (Mapi Research Trust, ESS_AU1.0_tur-TR1_10NOV2022). Değiştirme.
       intro: [
@@ -180,10 +177,6 @@ export default {
         },
       },
 
-      print: {
-        title: "Epworth Uykululuk Ölçeği cevapları",
-        note: "Bu özet bir teşhis değildir. ESS genel gündüz uykululuğunu ölçer, nedenini göstermez. Bir hekim ya da uyku uzmanıyla paylaşmak için hazırlanmıştır.",
-      },
 
       copyright: "ESS © MW Johns 1990-1997. Lisans ile kullanılır",
     },
@@ -193,8 +186,6 @@ export default {
     cover: "Silerek gör",
     hint: "Parmağınla ya da fareyle silerek sonucu gör.",
     skip: "Silmeden göster",
-    pdf: "PDF olarak kaydet",
-    pdfTip: "Açılan pencerede hedef olarak \"PDF olarak kaydet\"i seç. Doktora götürebileceğin bir cevap özeti çıkar.",
     edit: "Cevapları düzenle",
     restart: "Baştan başla",
     score: "Skor: {score} / {max}",

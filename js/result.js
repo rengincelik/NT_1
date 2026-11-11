@@ -57,46 +57,6 @@ export function createResult({
     }
   }
 
-  function renderSummary() {
-    const h = document.createElement("h3");
-    h.textContent = t(`tests.${testId}.print.title`);
-
-    const date = document.createElement("p");
-    date.textContent = new Date().toLocaleDateString(t("meta.dateLocale"));
-
-    const parts = [h, date];
-
-    const score = scoreLine();
-    if (score) {
-      const { scoring } = TESTS[testId];
-      const kind = classify(computeScore(answers, scoring), scoring);
-      const sp = document.createElement("p");
-      sp.textContent = `${score} (${t(`tests.${testId}.messages.${kind}.title`)})`;
-      parts.push(sp);
-    }
-
-    const ol = document.createElement("ol");
-    answers.forEach((a, i) => {
-      const li = document.createElement("li");
-      li.textContent = `${t(`tests.${testId}.questions.${i}`)} — ${t(`tests.${testId}.scale.${a}`)}`;
-      ol.appendChild(li);
-    });
-
-    const note = document.createElement("p");
-    note.textContent = t(`tests.${testId}.print.note`);
-
-    parts.push(ol, note);
-
-    const copyright = optional(`tests.${testId}.copyright`);
-    if (copyright) {
-      const cp = document.createElement("p");
-      cp.textContent = copyright;
-      parts.push(cp);
-    }
-
-    summary.replaceChildren(...parts);
-  }
-
   function render() {
     if (!answers) return;
     renderMessage();
@@ -109,7 +69,6 @@ export function createResult({
     answers = a;
     testId = id;
     renderMessage();
-    renderSummary();
 
     hint.hidden = false;
     skipBtn.parentElement.hidden = false;
@@ -130,7 +89,6 @@ export function createResult({
   skipBtn.addEventListener("click", () => scratch.revealNow());
   editBtn.addEventListener("click", () => onEdit());
   restartBtn.addEventListener("click", () => onRestart());
-  printBtn.addEventListener("click", () => window.print());
   onLangChange(render);
 
   return { show, hide };

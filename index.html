@@ -24,7 +24,6 @@
 	<link rel="stylesheet" href="css/base.css">
 	<link rel="stylesheet" href="css/layout.css">
 	<link rel="stylesheet" href="css/components.css">
-	<link rel="stylesheet" href="css/print.css">
 </head>
 <body>
 <!-- Arka plan katmanı: ileride shader/canvas buraya takılabilir -->
@@ -146,17 +145,16 @@
 				
 				<div id="result-actions" class="result-actions" hidden>
 					<div class="row">
-						<button type="button" id="print-btn" class="btn" data-i18n="result.pdf"></button>
+						
 						<a class="btn btn-ghost" data-share-whatsapp data-i18n="share.button"></a>
 					</div>
-					<p class="muted tip" data-i18n="result.pdfTip"></p>
+					
 					<div class="row">
 						<button type="button" id="edit-btn" class="btn btn-ghost" data-i18n="result.edit"></button>
 						<button type="button" id="restart-btn" class="btn btn-ghost" data-i18n="result.restart"></button>
 					</div>
 				</div>
 				
-				<div id="print-summary" class="print-summary"></div>
 			</div>
 			
 			<!-- main.js yazar (tests.<id>.copyright), telif satırı olmayan testte gizli kalır -->

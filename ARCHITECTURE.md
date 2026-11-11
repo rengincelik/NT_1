@@ -16,10 +16,8 @@ assets/
     tr.svg
 css/
   base.css          değişkenler (renk, font, ölçü), açık/koyu tema, reset, tipografi
-  background.css    .bg arka plan katmanı
   layout.css        container, sabit header, nav, dil bayrakları + tema butonu, bölümler, footer, mobil header
   components.css    buton, ilerleme çubuğu, kayar sorular, seçenekler, kazı-kazan
-  print.css         yazdırma / PDF çıktısı
 js/
   main.js           giriş noktası, modülleri bağlar, seçili testi yönetir
   config.js         dilden bağımsız ayarlar (AUTHOR, TESTS, DEFAULT_TEST, STATS)
@@ -48,7 +46,7 @@ worker/             sayaç Worker'ı (siteden ayrı yayınlanır, Cloudflare Wor
   README.md         yayınlama adımları
 ```
 
-CSS yükleme sırası (`index.html`): `base` → `background` → `layout` → `components` → `print`.
+CSS yükleme sırası (`index.html`): `base` → `background` → `layout` → `components` → .
 
 ---
 
@@ -62,7 +60,6 @@ main.js
  ├─ theme.js ─────────── i18n.js
  ├─ testswitch.js ────── i18n.js
  ├─ site.js ──────────── config.js (AUTHOR), i18n.js, stats.js (sadece statsEnabled)
- ├─ nav.js               (bağımsız)
  ├─ share.js ─────────── i18n.js
  ├─ stats.js ─────────── config.js (STATS), i18n.js
  ├─ richtext.js ──────── references.js, i18n.js
@@ -117,7 +114,7 @@ Açılışta hiçbir şey kaydedilmez (`setLang(..., { persist: false })`). Tara
 | `share.js` | `update` | link `href`'ini yeniden kurar |
 | `richtext.js` | `renderAll` | Hakkımda ve Narkolepsi metinlerini, alıntı numaralarını ve kaynak listelerini yeniden çizer |
 | `stats.js` | `render` | sayıları yeni dilin biçimiyle yazar (yalnızca sayaç açıksa kayıtlı) |
-| `result.js` | `render` | mesaj + PDF özeti + kapak yazısı (gösterilen testin metinleriyle) |
+| `result.js` | `render` | mesaj  + kapak yazısı (gösterilen testin metinleriyle) |
 | `quiz.js` | `refreshText` | aktif testin soru ve seçenek metinleri, ilerleme, buton etiketi, ipucu |
 | `testswitch.js` | `paint` | test butonlarının etiketleri |
 | `main.js` | `renderTestMeta` | seçili testin alt başlığı, yönergesi ve telif satırı |
@@ -134,24 +131,23 @@ home         tagline, start, views, tests
 about        lead, big, p1, p2
 narcolepsy   title, body[]   (paragraf dizisi; "## " ile başlayan satır h3, [@anahtar] alıntı)
 test         title, switchLabel, progress({n},{total}), prev, next, finish, tip({min},{max})   (testlerin ortak arayüz metinleri)
-tests.<id>   name, subtitle, [intro[]], questions[], scale[], messages, print, [copyright]     (her test için bir blok; köşeli olanlar isteğe bağlı)
+tests.<id>   name, subtitle, [intro[]], questions[], scale[], messages,  [copyright]     (her test için bir blok; köşeli olanlar isteğe bağlı)
                messages.<anahtar> → { title, body }; anahtarlar scoring tipine göre:
                  threshold biçimi : suspect | unlikely | neutral
                  bands biçimi     : bands[].key değerleri (+ "neutral")
-               print → { title, note }
                intro[]   → sorulardan önce gösterilen yönerge paragrafları (yoksa gösterilmez)
-               copyright → test panelinin altında ve PDF özetinde gösterilen telif/lisans satırı (yoksa gösterilmez)
-result       cover, hint, skip, pdf, pdfTip, edit, restart, score({score},{max})
+               copyright → test panelinin altında ve gösterilen telif/lisans satırı (yoksa gösterilmez)
+result       cover, hint, skip, edit, restart, score({score},{max})
 share        button, text
 footer       role, note, statsNote   (statsNote yalnızca sayaç açıkken gösterilir)
 ```
 
-HTML'e `data-i18n` ile bağlananlar: `site.name`, `nav.*`, `home.*`, `narcolepsy.title`, `test.title`, `test.switchLabel` (aria-label), `theme.toggle` (aria-label), `test.prev`, `result.hint`, `result.skip`, `result.pdf`, `result.pdfTip`, `result.edit`, `result.restart`, `share.button`.
+HTML'e `data-i18n` ile bağlananlar: `site.name`, `nav.*`, `home.*`, `narcolepsy.title`, `test.title`, `test.switchLabel` (aria-label), `theme.toggle` (aria-label), `test.prev`, `result.hint`, `result.skip`,  `result.edit`, `result.restart`, `share.button`.
 
-JS ile çizilenler: `about.*` (lead, big, p1, p2) ve `narcolepsy.body` (`richtext.js`, `data-i18n-rich*` ile bağlı), `refs.*`, `tests.<id>.*` (soru, seçenek, alt başlık, ad, mesaj, PDF özeti), `test.progress`, `test.next`, `test.finish`, `test.tip` (`{min}`/`{max}` içerdiği için `data-i18n` ile bağlanamaz, `quiz.js` yazar), `result.score`, `tests.<id>.intro` ve `tests.<id>.copyright` (`main.js`), `meta.dateLocale`, `footer.*`, `share.text`, `result.cover`, `theme.toggle` (butonun `title`'ı, `theme.js`).
+JS ile çizilenler: `about.*` (lead, big, p1, p2) ve `narcolepsy.body` (`richtext.js`, `data-i18n-rich*` ile bağlı), `refs.*`, `tests.<id>.*` (soru, seçenek, alt başlık, ad, mesaj), `test.progress`, `test.next`, `test.finish`, `test.tip` (`{min}`/`{max}` içerdiği için `data-i18n` ile bağlanamaz, `quiz.js` yazar), `result.score`, `tests.<id>.intro` ve `tests.<id>.copyright` (`main.js`), `meta.dateLocale`, `footer.*`, `share.text`, `result.cover`, `theme.toggle` (butonun `title`'ı, `theme.js`).
 
 ### Tutarlılık kuralları
-- ESS gibi lisanslı bir testin yönerge (`intro`), madde (`questions`), seçenek (`scale`) ve `copyright` metinleri lisanslı kaynaktan birebir alınır, düzenlenmez. Bant başlıkları yazarın yorum adlarıdır. Bant gövde metinleri (`messages.*.body`) ve `print.note` bize aittir.
+- ESS gibi lisanslı bir testin yönerge (`intro`), madde (`questions`), seçenek (`scale`) ve `copyright` metinleri lisanslı kaynaktan birebir alınır, düzenlenmez. Bant başlıkları yazarın yorum adlarıdır. Bant gövde metinleri (`messages.*.body`)  bize aittir.
 - Her test için `config.js > TESTS[id].questionCount` = `tests.<id>.questions.length`, `scaleSize` = `tests.<id>.scale.length` (her dil dosyasında).
 - `TESTS[id].scoring.weights.length` = `questionCount`.
 - `scoring.bands` kullanılıyorsa her `key` için `tests.<id>.messages.<key>` bulunmalı (ve `neutral`, skor hiçbir banda düşmezse).
@@ -168,7 +164,7 @@ JS'in bağlandığı id ve attribute'lar:
 | `#lang-list` | `langswitch.js` (bayraklar buraya basılır) |
 | `#theme-btn` | `theme.js` (varsayılan `hidden`, `initTheme` açar) |
 | `#footer` | `site.js` |
-| `.site-nav a[href="#..."]`, `#about`, `#narcolepsy`, `#test` | `nav.js` |
+| `.site-nav a[href="#..."]`, `#about`, `#narcolepsy`, `#test` | |
 | `[data-share-whatsapp]` | `share.js` |
 | `#stats`, `#stat-views`, `#stat-tests` | `stats.js` (`#stats` varsayılan `hidden`) |
 | `[data-rich-block]`, `[data-i18n-rich]`, `[data-i18n-rich-list]`, `[data-refs]` | `richtext.js` |
@@ -180,7 +176,7 @@ JS'in bağlandığı id ve attribute'lar:
 | `#quiz-panel`, `#quiz-viewport`, `#quiz-track`, `#prev-btn`, `#next-btn`, `#quiz-tip` | `quiz.js` |
 | `#progress-text`, `#progress-fill`, `#progress-bar` | `quiz.js` |
 | `#result-panel`, `#result-content`, `#scratch`, `#scratch-hint`, `#skip-scratch`, `#result-actions` | `result.js` |
-| `#edit-btn`, `#restart-btn`, `#print-btn`, `#print-summary` | `result.js` |
+| `#edit-btn`, `#restart-btn`,  | `result.js` |
 | `#bg` | arka plan katmanı (JS bağlı değil) |
 
 Header'ın sağ tarafı `.header-tools` içindedir: `#lang-list` + `#theme-btn`. Sarmalayıcı mobil grid düzeninde (`layout.css`, `36rem` altı) bu ikisini tek hücre yapar.
@@ -229,16 +225,15 @@ Döndürür: `{ setTest(id), goTo(n), reset(), lastIndex (getter), testId (gette
 - `reset()` aktif testin cevaplarını ve seçimlerini temizler, 0. soruya döner.
 
 ### `result.js`: `createResult({...})`
-Parametreler: `panel, content, canvas, hint, skipBtn, actions, summary, editBtn, restartBtn, printBtn, onEdit, onRestart`.
+Parametreler: `panel, content, canvas, hint, skipBtn, actions, summary, editBtn, restartBtn, onEdit, onRestart`.
 Döndürür: `{ show(answers, testId, { revealed }), hide() }`.
 
 `show(answers, testId, opts)`:
 1. `TESTS[testId].scoring` ile `classify(computeScore(answers, scoring), scoring)` → mesaj anahtarı → `tests.<id>.messages.<anahtar>` → `#result-content`. `showScore` ise başlıkla gövde arasına `result.score` satırı (`.result-score`) eklenir.
-2. `#print-summary` doldurulur (`tests.<id>.print.title`, tarih `meta.dateLocale` ile, `showScore` ise "Skor: X / Y (mesaj başlığı)" satırı, soru + seçilen etiket, `tests.<id>.print.note`, varsa `tests.<id>.copyright`). Skor satırındaki parantez içi metin mesaj başlığıdır, başlıkları değiştirirken PDF'te de nasıl göründüğüne bak.
+
 3. panel açılır, `requestAnimationFrame` içinde `scratch.reset()`; `opts.revealed` ise hemen ardından `scratch.revealNow()`
 4. Kapak açılınca (`onReveal`): `hint` ve `skipBtn`'ın parent'ı gizlenir, `actions` gösterilir
 
-`#print-btn` → `window.print()`.
 
 ### `scratch.js`: `createScratch({ canvas, onReveal, getLabel, threshold=0.5, brush=36 })`
 Döndürür: `{ reset(), revealNow(), relabel() }`.
@@ -260,7 +255,6 @@ Döndürür: `{ reset(), revealNow(), relabel() }`.
 
 ## 6. Diğer modüller
 
-- `nav.js`: `IntersectionObserver`, `rootMargin: "-35% 0px -60% 0px"`. Kesişen bölümün menü linkine `aria-current="true"` koyar.
 - `share.js`: `https://wa.me/?text=` + `encodeURIComponent(t("share.text") + " " + url)`. `url` = mevcut adres, hash ve query'siz, `?lang=<aktif dil>` eklenmiş. Dil değişince yeniden kurulur.
 - `site.js`: footer'ı `AUTHOR.name`, `AUTHOR.links[]` (`config.js`) ve `footer.role`, `footer.note` (dil dosyası) ile çizer. `statsEnabled` ise ikinci bir paragraf olarak `footer.statsNote` eklenir. `http(s)` ile başlayan linklere `target="_blank" rel="noopener"`.
 - `langswitch.js`: `LANGUAGES`'tan bayrak butonları üretir (`<button><img></button>`, `aria-label` = dilin kendi adı, `aria-pressed` = aktif dil).
@@ -332,8 +326,7 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 - `[hidden] { display: none !important }` global.
 - Yumuşak scroll yalnızca `prefers-reduced-motion: no-preference` iken.
 
-### `background.css`
-`.bg`: `position: fixed; inset: 0; z-index: -1; background: var(--bg)`. Arka plan değişikliği (gradient/canvas/shader) sadece bu katmanda yapılır, sayfanın geri kalanı etkilenmez.
+
 
 ### `layout.css`
 - `.container`: `max-width: var(--maxw)`, yatay padding.
@@ -350,26 +343,18 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 ### `components.css`
 - `.btn`, `.btn-ghost`
 - İlerleme: `.progress`, `.progress-text`, `.progress-bar`
-- Kayar test: `.viewport` (overflow hidden), `.track` (flex, transform geçişi), `.slide` (`flex: 0 0 100%`, içinde 4px padding), `.question-text`, `.options`, `.option`, `.opt-key`. Seçili durum `input:checked + label`.
+- Kayar test: `.viewport` (overflow hidden), `.track` (flex, transform geçişi), `.slide` (`flex: 1`, içinde 4px padding), `.question-text`, `.options`, `.option`, `.opt-key`. Seçili durum `input:checked + label`.
 - `.scroll-box`: `max-height: min(62vh, 30rem)`, `overflow-y: auto`, solda hizalı (sayfanın geri kalanı ortalı). Kaydırma gölgesi `background-attachment: local` ile. Klavye için HTML'de `tabindex="0" role="region"` + isim (`aria-label` / `aria-labelledby`).
 - Alıntılar: `.cite`, `.refs`, `.refs-title`, `.refs li.flash`.
 - Sonuç: `.scratch-card`, `.scratch-content`, canvas üst katman, `.revealed` ile `opacity: 0`.
 - `prefers-reduced-motion: reduce` altında geçişler kapalı.
 
-### `print.css`
-`@media print` içinde `.bg`, header, footer, `#home`, `#about`, `#narcolepsy`, `#test`'in `#result-panel` dışındaki çocukları ve `#result-panel`'in `.print-summary` dışındaki çocukları gizlenir. Sadece `.print-summary` basılır (sola hizalı, beyaz zemin). Test seçici `#test`'in çocuğu olduğu için basılmaz, ayrıca bir kural gerekmez.
-
----
-
 ## 8. Değişiklik rehberi
 
 | Yapılacak | Değişecek yer |
 |---|---|
-| Metin düzenleme | `js/locales/<dil>.js` (İngilizce `data-i18n` metinleri için ayrıca `index.html` yedeği) |
 | Yeni dil ekleme | `js/locales/<kod>.js` + `assets/flags/<kod>.svg` + `languages.js` içine bir satır. Her dilde `tests.<id>` blokları da çevrilir. Tarayıcı dili eşlemesi otomatik çalışır. |
-| Varsayılan dili değiştirme | `languages.js > DEFAULT_LANG` (yedek HTML metni de o dile uyarlanmalı) |
 | Tarayıcı dili eşleme mantığı | `i18n.js > fromBrowser`, öncelik sırası `initI18n` |
-| Yazar adı, linkler | `config.js > AUTHOR` |
 | Yazar açıklaması, footer notu | `locales/*.js > footer` |
 | Soru metni düzenleme | `locales/*.js > tests.<id>.questions` |
 | Soru ekleme/çıkarma | her `locales/*.js > tests.<id>.questions` + `config.js > TESTS[id].questionCount` + `scoring.weights` |
@@ -392,19 +377,15 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 | Yeni bölüm ekleme | `index.html` (section id) + `nav` linki + `locales > nav.*` anahtarı |
 | Yeni yerelleştirilen HTML metni | elemana `data-i18n="anahtar"` + tüm dil dosyalarına anahtar |
 | Menü/header düzeni | `layout.css` (`--header-h`, `.header-tools`, `36rem` breakpoint) |
-| PDF çıktısı | `print.css` + `result.js > renderSummary` (yeni bölüm eklenirse `print.css` gizleme listesine de ekle) |
 | Sayı kutusunu açma / kapama | `config.js > STATS.workerUrl` (boş = kapalı) |
 | GoatCounter arka plan sayımını açma / kapama | `config.js > STATS.goatcounterCode` (boş = kapalı) |
 | GoatCounter'a giden yollar | `config.js > STATS.paths` |
 | Worker'a izin verilen siteler | `worker/wrangler.toml > ALLOWED_ORIGINS` (sonra Worker'ı yeniden yayınla) |
 | Yeni sayaç (test dışı) ekleme | `worker/src/index.js` (rota + `totals`), `stats.js`, sayfada gösterim |
-| Home içeriği | `index.html > #home` + `locales/*.js > home` |
 | Sayacın gösterdiği etiketler | `locales/*.js > home.views`, `home.tests` |
 | Kaynak ekleme | `references.js > REFERENCES`, metinde `[@anahtar]` |
 | Narkolepsi metnine paragraf / başlık ekleme | her `locales/*.js > narcolepsy.body` dizisine eleman (başlık için `## ` ile başla) |
-| Hakkımda metnine alıntı | `locales/*.js > about.lead / big / p1 / p2` içine `[@anahtar]` |
 | Kutuda kaydırma yüksekliği, hizalama | `components.css > .scroll-box` |
-| Kaynak başlığı, "Kaynak n" etiketi | `locales/*.js > refs` |
 
 ### Yeni test ekleme
 
@@ -422,8 +403,8 @@ Test seçici, quiz, sonuç, PDF özeti ve sayaç test kimliğine (`id`) göre ç
    },
    ```
    Tek eşikli bir test ise `bands` yerine `threshold` kullan (mesaj anahtarları `suspect` / `unlikely`). İsteğe bağlı: `keyBase: 0` (numaralar 0'dan), `showScore: true` (sonuçta ve PDF'te skor). Çalışan bir bant örneği: `TESTS.ess`.
-2. **Her `js/locales/*.js > tests.<id>`**: `name`, `subtitle`, `questions[]`, `scale[]`, `messages.<her band key>` (bant biçiminde `neutral` gerekmez, `threshold` biçiminde gerekir), `print.title`, `print.note`; isteğe bağlı `intro[]` ve `copyright`. Soru ve seçenek sayıları 1. adımla aynı olmalı. Metinler telifli bir ölçekse lisans ve lisanslı çeviri gerekir, lisanslı metinler birebir kopyalanır (ESS örneği: `tests.ess`).
+2. **Her `js/locales/*.js > tests.<id>`**: `name`, `subtitle`, `questions[]`, `scale[]`, `messages.<her band key>` (bant biçiminde `neutral` gerekmez, `threshold` biçiminde gerekir),  `intro[]` ve `copyright`. Soru ve seçenek sayıları 1. adımla aynı olmalı. Metinler telifli bir ölçekse lisans ve lisanslı çeviri gerekir, lisanslı metinler birebir kopyalanır (ESS örneği: `tests.ess`).
 3. **`worker/src/index.js > TEST_IDS`**: id'yi ekle, Worker'ı yeniden yayınla (`wrangler deploy`). Eklenmezse test bitişi Worker'dan 404 alır (sayfa bozulmaz, konsola uyarı yazılır, o test Worker'da sayılmaz). D1 şemasında değişiklik gerekmez, satır ilk sayımda oluşur.
 4. **Seçici otomatik görünür**: `TESTS` içinde 2 test olunca `#test-switch` açılır, buton etiketi `tests.<id>.name`.
 5. **Metin güncellemeleri (isteğe bağlı, içerik)**: `about.p2` ve `home.tagline` yeni testi de anlatacak şekilde, `narcolepsy.body` içine yeni testi anlatan paragraf, `references.js`'e kaynaklar, `footer.note` gerekiyorsa.
-6. **Kontrol**: `TESTS[id]` ile dil dosyalarındaki uzunluk ve anahtarlar tutarlı mı (bölüm 3, tutarlılık kuralları), her iki dilde testi bitir, test değiştirince cevapların ve sonucun korunduğunu gör, PDF özetini aç.
+6. **Kontrol**: `TESTS[id]` ile dil dosyalarındaki uzunluk ve anahtarlar tutarlı mı (bölüm 3, tutarlılık kuralları), her iki dilde testi bitir, test değiştirince cevapların ve sonucun korunduğunu gör.
