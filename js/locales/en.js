@@ -17,19 +17,19 @@ export default {
   },
 
   lang: { label: "Language" },
+	theme: { toggle: "Dark theme" },
 
   refs: {
     title: "Sources",
     cite: "Source {n}",
   },
 
-  about: {
-    lead: "For 15 years I walked around like a zombie and blamed it on \"engineering stress\". When my battery died out of nowhere in the middle of the day, or my knees buckled when I laughed, I called it \"just being busy\".",
-    big: "Turns out it has a name: Narcolepsy Type 1.",
-    p1: "Everyone around us says \"we're all tired, don't make a fuss\", and doctors just say \"you're not sleeping enough\", so it never occurs to you. Noticing a fault in your own body can take years. In Turkey, thousands of people are still groping around in the dark and running into walls.",
-    p2: "If you have ever had those moments where you quietly think \"something is off with me, nobody can be this exhausted\", you don't need to read long articles. There is a practical 5-question screening test used in clinics, the Swiss Narcolepsy Scale (SNS). It took me 15 years to learn this. I put it here so you can check in 2 minutes.",
-  },
-
+	about: {
+		lead: "For as long as I can remember, I was constantly exhausted and sleepbound. I could fall asleep anytime, anywhere. Yet every time I saw a doctor, I got the exact same response: 'Everything looks fine, nothing is wrong.'",
+		big: "In the end, I finally found the answer: I was right all along—there was a real problem.",
+		p1: "I built this page for anyone who might be in the exact same boat. Below, you'll find two screening tests. The Epworth Scale (ESS) measures general daytime sleepiness, while the Swiss Narcolepsy Scale (SNS) specifically targets Type 1 Narcolepsy symptoms. These tools are not diagnostic, but show a strong correlation in clinical cases.",
+		p2: "Sleep is a foundational pillar of health, yet it's often the first thing we overlook. If you have even a passing suspicion about your daytime exhaustion, taking these short tests might give you some clarity. If your results raise a red flag, consulting a specialist is the best next step. You can find a detailed breakdown of Narcolepsy further down the page."
+	},
   home: {
     tagline: "Swiss Narcolepsy Scale (SNS) · about 2 minutes",
     start: "Take the test",

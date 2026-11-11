@@ -20,3 +20,8 @@ Sonra tarayıcıda `http://localhost:8000` adresini aç.
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md): teknik yapı
 - [`TODO.md`](TODO.md): yapılacaklar
+
+### Epworth Sleepiness Scale (ESS)
+* **Copyright:** © Murray Johns 1990–1997.
+* **Licensing:** Used under Non-Commercial Educational License (ePROVIDE™ Agreement ID: 154560).
+* **Distributed by:** Mapi Research Trust, Lyon, France ([eprovide.mapi-trust.org](https://eprovide.mapi-trust.org)).

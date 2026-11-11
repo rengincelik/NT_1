@@ -9,12 +9,14 @@ import { createResult } from "./result.js";
 import { initTestSwitch } from "./testswitch.js";
 import { initStats, trackTestCompleted } from "./stats.js";
 import { initRichText } from "./richtext.js";
+import { initTheme } from "./theme.js";
 
 const $ = (sel) => document.querySelector(sel);
 
 await initI18n();
 
 initLangSwitch();
+initTheme();
 initSite();
 initShare();
 initRichText();

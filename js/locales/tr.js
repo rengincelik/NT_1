@@ -18,17 +18,19 @@ export default {
 
   lang: { label: "Dil" },
 
+	theme: { toggle: "Koyu tema" },
+
   refs: {
     title: "Kaynaklar",
     cite: "Kaynak {n}",
   },
 
-  about: {
-    lead: "15 yıl boyunca zombi gibi gezmeyi \"mühendislik stresi\", gün ortasında pilimin ani bitmesini ve gülerken dizlerimin bağının çözülmesini \"yoğunluk\" zannettim.",
-    big: "Meğer adı Narkolepsi Tip 1'miş.",
-    p1: "Etrafımızdakiler zaten \"Aman hepimiz yorgun, uzatmayın\" dediği, doktorlar ise sadece \"uykusuzsundur\" deyip geçtiği için insanın aklına gelmiyor. Kendi bedenindeki arızayı fark etmek yıllar alabiliyor. Türkiye'de binlerce insan hâlâ karanlıkta el yordamıyla duvara çarpıyor.",
-    p2: "Eğer senin de yıllardır içten içe \"Bende bir gariplik var, herkes bu kadar bitik olamaz\" dediğin anlar varsa, uzun yazılar okumana gerek yok. İsviçre Narkolepsi Ölçeği (SNS) adında, klinikte kullanılan 5 soruluk pratik bir ön tarama testi var. Ben 15 yılda öğrendim, sen 2 dakikada kontrol et diye buraya koydum.",
-  },
+	about: {
+		lead: "Kendimi bildim bileli aşırı yorgun ve uykuluydum. Yer, zaman fark etmeksizin her an, her yerde uyuyabiliyordum. Ne zaman doktora gitsem hep aynı yanıtı aldım: 'Tahlillerin temiz, bir sorunun yok.'",
+		big: "Sonunda gerçeği öğrendim: Haklıymışım, ortada gerçekten ciddi bir problem varmış.",
+		p1: "Bu siteyi benimle benzer durumda olan ve 'bende bir gariplik var' diyen kişiler için hazırladım. Aşağıda 2 farklı tarama testi göreceksiniz. Epworth (ESS) genel gün içi uykululuk seviyenizi ölçerken, İsviçre Narkolepsi Ölçeği (SNS) özellikle Tip 1 Narkolepsi semptomlarına odaklanır. Bu testler teşhis koymaz ama klinik durumlarda yüksek paralellik gösterir.",
+		p2: "Uyku sağlığımızın en kritik ama en çok ihmal edilen parçası. Eğer tükenmişliğinizle ilgili en ufak bir şüpheniz varsa, bu testleri çözmek size bir fikir verebilir. Sonuçlarınız şüphe uyandırırsa bir uzmana görünmekte fayda var. Narkolepsi hakkında daha detaylı açıklamayı ise sayfanın devamında bulabilirsiniz."
+	},
 
   home: {
     tagline: "İsviçre Narkolepsi Ölçeği (SNS) · yaklaşık 2 dakika",
@@ -38,7 +40,7 @@ export default {
   },
 
   // body: paragraf dizisi. "## " ile başlayan satır başlık olur. [@anahtar] kaynak numarası ekler (js/references.js).
-  // Aşağıdakiler GEÇİCİ metindir.
+
 	narcolepsy: {
 		title: "Narkolepsi",
 		body: [

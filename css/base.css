@@ -1,5 +1,7 @@
-/* Tasarım değişkenleri (açık = kırık beyaz, koyu = sistem ayarına göre), reset, tipografi */
+/* Tasarım değişkenleri (açık = kırık beyaz, koyu = kullanıcı seçimi ya da sistem ayarı), reset, tipografi */
 :root {
+  color-scheme: light;
+
   --bg: #f6f3ee;
   --surface: #fcfaf6;
   --text: #34323a;
@@ -24,8 +26,16 @@
   --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
 }
 
+/*
+  Koyu tema iki yoldan gelir; ikisinde de değişkenler aynı olmalı (elle senkron):
+  1) Kullanıcı seçim yapmadıysa: sistem ayarı (data-theme yok ya da "dark")
+  2) Kullanıcı koyu seçtiyse: :root[data-theme="dark"]
+  Kullanıcı açık seçtiyse (data-theme="light") sistem koyu olsa da açık kalır.
+*/
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
     --bg: #15161c;
     --surface: #1d1f27;
     --text: #e6e4ea;
@@ -42,6 +52,26 @@
     --scratch-b: #4a3d5a;
     --scratch-ink: #aab6d0;
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #15161c;
+  --surface: #1d1f27;
+  --text: #e6e4ea;
+  --muted: #9a97a4;
+  --accent: #7f9fc9;
+  --accent-strong: #8fb0e0;
+  --accent-soft: #262d3d;
+  --on-accent: #0f1218;
+  --border: #2c2f3a;
+  --warm: #2a2530;
+  --danger: #e08a85;
+
+  --scratch-a: #3a4560;
+  --scratch-b: #4a3d5a;
+  --scratch-ink: #aab6d0;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

@@ -57,6 +57,17 @@ function store(code) {
   try { localStorage.setItem(STORAGE_KEY, code); } catch { /* özel pencere vb. */ }
 }
 
+// Tarayıcı dil tercihleri (navigator.languages, sıralı). "tr-TR" → "tr".
+// Kayıtlı dillerden ilk eşleşen döner, hiçbiri yoksa null.
+function fromBrowser() {
+  const tags = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const tag of tags) {
+    const base = String(tag ?? "").toLowerCase().split("-")[0];
+    if (find(base)) return base;
+  }
+  return null;
+}
+
 export async function setLang(code, { persist = true } = {}) {
   if (!find(code)) code = DEFAULT_LANG;
   const mine = ++seq;
@@ -75,10 +86,11 @@ export async function setLang(code, { persist = true } = {}) {
   listeners.forEach((fn) => fn(code));
 }
 
-// Öncelik: ?lang= (paylaşılan link) > önceki seçim > varsayılan dil
+// Öncelik: ?lang= (paylaşılan link) > önceki seçim (bayrağa tıklama) > tarayıcı dili > varsayılan dil.
+// Açılışta hiçbir şey kaydedilmez (persist: false); yalnızca kullanıcı bayrağa tıklayınca yazılır.
 export async function initI18n() {
   fallback = await load(DEFAULT_LANG);
   const fromUrl = new URLSearchParams(location.search).get("lang");
-  const wanted = [fromUrl, readStored()].find((c) => c && find(c)) ?? DEFAULT_LANG;
+  const wanted = [fromUrl, readStored()].find((c) => c && find(c)) ?? fromBrowser() ?? DEFAULT_LANG;
   await setLang(wanted, { persist: false });
 }

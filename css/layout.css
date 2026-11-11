@@ -48,6 +48,14 @@
 .site-nav a:hover { color: var(--text); }
 .site-nav a[aria-current] { color: var(--text); border-bottom-color: var(--accent-strong); }
 
+/* Sağ taraf: dil bayrakları + tema butonu (mobilde grid'in ikinci hücresi) */
+.header-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .6rem;
+}
+
 /* Dil bayrakları: yeni dil eklenince satıra sığmazsa alta sarar */
 .lang-list {
   display: flex;
@@ -80,6 +88,28 @@
 
 .lang-btn:hover { opacity: 1; }
 .lang-btn[aria-pressed="true"] { opacity: 1; border-color: var(--accent-strong); }
+
+/* Tema butonu: açıkken ay (koyuya geç), koyuyken güneş (açığa geç) görünür */
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+
+.theme-btn:hover { color: var(--text); border-color: var(--muted); }
+.theme-btn svg { display: block; }
+.theme-btn .icon-sun { display: none; }
+.theme-btn[aria-pressed="true"] .icon-sun { display: block; }
+.theme-btn[aria-pressed="true"] .icon-moon { display: none; }
 
 .section { padding: 4.5rem 0; }
 
@@ -125,7 +155,7 @@
 
 .footer-note { max-width: 36rem; margin: 0 auto; font-size: .85rem; }
 
-/* Dar ekran: header iki satır (üstte isim + bayraklar, altta menü) */
+/* Dar ekran: header iki satır (üstte isim + bayraklar/tema, altta menü) */
 @media (max-width: 36rem) {
   :root { --header-h: 5.4rem; }
   .header-inner {
