@@ -2,11 +2,11 @@
 
 // Alt bilgi: kendi bilgilerini buraya yaz (açıklama ve not metni dil dosyalarında)
 export const AUTHOR = {
-  name: "Adın Soyadın",
+  name: "Rengin Çelik",
   links: [
-    { label: "GitHub", url: "#" },
-    { label: "LinkedIn", url: "#" },
-    { label: "Email", url: "mailto:ornek@ornek.com" },
+    { label: "GitHub", url: "https://github.com/rengincelik" },
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/rengincelik/" },
+    { label: "Email", url: "mailto:rengin.celik97@gmail.com" },
   ],
 };
 

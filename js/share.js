@@ -1,6 +1,7 @@
 // WhatsApp paylaşım linkleri. Sadece site linki paylaşılır, cevaplar asla.
 // Link ?lang= taşır: Türkçe seçiliyken paylaşılan link karşı tarafta Türkçe açılır.
-import { t, getLang, onLangChange } from "./i18n.js";
+// Metin eklenmez: önizleme kartını (başlık, açıklama, görsel) index.html'deki OG etiketleri çizer.
+import { getLang, onLangChange } from "./i18n.js";
 
 function update() {
   const url = new URL(location.href);
@@ -8,7 +9,7 @@ function update() {
   url.search = "";
   url.searchParams.set("lang", getLang());
 
-  const href = "https://wa.me/?text=" + encodeURIComponent(`${t("share.text")} ${url.href}`);
+  const href = "https://wa.me/?text=" + encodeURIComponent(url.href);
 
   document.querySelectorAll("[data-share-whatsapp]").forEach((a) => {
     a.href = href;

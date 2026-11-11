@@ -15,9 +15,9 @@ assets/
     en.svg
     tr.svg
 css/
-  base.css          değişkenler (renk, font, ölçü), karanlık mod, reset, tipografi
+  base.css          değişkenler (renk, font, ölçü), açık/koyu tema, reset, tipografi
   background.css    .bg arka plan katmanı
-  layout.css        container, sabit header, nav, dil bayrakları, bölümler, footer, mobil header
+  layout.css        container, sabit header, nav, dil bayrakları + tema butonu, bölümler, footer, mobil header
   components.css    buton, ilerleme çubuğu, kayar sorular, seçenekler, kazı-kazan
   print.css         yazdırma / PDF çıktısı
 js/
@@ -26,6 +26,7 @@ js/
   i18n.js           çeviri motoru
   languages.js      dil kaydı (LANGUAGES, DEFAULT_LANG)
   langswitch.js     header bayrak butonları
+  theme.js          tema (açık/koyu), header tema butonu, seçimi saklama
   testswitch.js     test seçici butonları (tek test varsa gizli)
   site.js           footer render
   nav.js            scroll ile menü vurgusu
@@ -58,6 +59,7 @@ main.js
  ├─ config.js            (TESTS, DEFAULT_TEST)
  ├─ i18n.js ──────────── languages.js ──(dynamic import)── locales/*.js
  ├─ langswitch.js ────── languages.js, i18n.js
+ ├─ theme.js ─────────── i18n.js
  ├─ testswitch.js ────── i18n.js
  ├─ site.js ──────────── config.js (AUTHOR), i18n.js, stats.js (sadece statsEnabled)
  ├─ nav.js               (bağımsız)
@@ -74,7 +76,7 @@ main.js
 Başlatma sırası (`main.js`):
 
 1. `await initI18n()`
-2. `initLangSwitch()`, `initSite()`, `initNav()`, `initShare()`, `initRichText()`
+2. `initLangSwitch()`, `initTheme()`, `initSite()`, `initNav()`, `initShare()`, `initRichText()`
 3. `initStats()` (beklenmez, sayılar gelince kutu kendi açılır)
 4. `createResult({...})`
 5. `createQuiz({ tests: TESTS, initialTest: DEFAULT_TEST, ... })`; `onFinish(answers, id)` içinde `finished.set`, `trackTestCompleted(id)`, sonra `result.show(answers, id)`
@@ -93,8 +95,11 @@ Başlatma sırası (`main.js`):
 
 ### Dil seçim önceliği (`initI18n`)
 1. URL `?lang=`
-2. `localStorage["lang"]` (try/catch içinde)
-3. `DEFAULT_LANG`
+2. `localStorage["lang"]` (try/catch içinde; yalnızca kullanıcı bayrağa tıklayınca yazılır)
+3. Tarayıcı dili: `navigator.languages` sırasıyla, bölge kodu atılarak (`tr-TR` → `tr`), `LANGUAGES`'ta kayıtlı ilk eşleşme (`fromBrowser`)
+4. `DEFAULT_LANG`
+
+Açılışta hiçbir şey kaydedilmez (`setLang(..., { persist: false })`). Tarayıcı dilinden gelen seçim saklanmadığı için tarayıcı dili sonradan değişirse site de uyar. Yeni dil eklenince tarayıcı eşlemesi otomatik çalışır, ek kod gerekmez.
 
 ### Çalışma şekli
 - Seçili dil sözlüğü `dict`, varsayılan dil `fallback`. `get(path)` önce `dict`'e, bulamazsa `fallback`'e bakar. Eksik çeviri varsayılana düşer.
@@ -107,6 +112,7 @@ Başlatma sırası (`main.js`):
 | Modül | Fonksiyon | Yaptığı |
 |---|---|---|
 | `langswitch.js` | `mark` | `aria-pressed` günceller |
+| `theme.js` | `label` | tema butonunun `title`'ını yeni dilde yazar |
 | `site.js` | `renderFooter` | footer'ı yeniden çizer |
 | `share.js` | `update` | link `href`'ini yeniden kurar |
 | `richtext.js` | `renderAll` | Hakkımda ve Narkolepsi metinlerini, alıntı numaralarını ve kaynak listelerini yeniden çizer |
@@ -122,6 +128,7 @@ meta         title, description, dateLocale
 site         name
 nav          aria, home, about, narcolepsy, test
 lang         label
+theme        toggle   (tema butonunun aria-label ve title'ı)
 refs         title, cite({n})
 home         tagline, start, views, tests
 about        lead, big, p1, p2
@@ -139,16 +146,16 @@ share        button, text
 footer       role, note, statsNote   (statsNote yalnızca sayaç açıkken gösterilir)
 ```
 
-HTML'e `data-i18n` ile bağlananlar: `site.name`, `nav.*`, `home.*`, `narcolepsy.title`, `test.title`, `test.switchLabel` (aria-label), `test.prev`, `result.hint`, `result.skip`, `result.pdf`, `result.pdfTip`, `result.edit`, `result.restart`, `share.button`.
+HTML'e `data-i18n` ile bağlananlar: `site.name`, `nav.*`, `home.*`, `narcolepsy.title`, `test.title`, `test.switchLabel` (aria-label), `theme.toggle` (aria-label), `test.prev`, `result.hint`, `result.skip`, `result.pdf`, `result.pdfTip`, `result.edit`, `result.restart`, `share.button`.
 
-JS ile çizilenler: `about.*` (lead, big, p1, p2) ve `narcolepsy.body` (`richtext.js`, `data-i18n-rich*` ile bağlı), `refs.*`, `tests.<id>.*` (soru, seçenek, alt başlık, ad, mesaj, PDF özeti), `test.progress`, `test.next`, `test.finish`, `test.tip` (`{min}`/`{max}` içerdiği için `data-i18n` ile bağlanamaz, `quiz.js` yazar), `result.score`, `tests.<id>.intro` ve `tests.<id>.copyright` (`main.js`), `meta.dateLocale`, `footer.*`, `share.text`, `result.cover`.
+JS ile çizilenler: `about.*` (lead, big, p1, p2) ve `narcolepsy.body` (`richtext.js`, `data-i18n-rich*` ile bağlı), `refs.*`, `tests.<id>.*` (soru, seçenek, alt başlık, ad, mesaj, PDF özeti), `test.progress`, `test.next`, `test.finish`, `test.tip` (`{min}`/`{max}` içerdiği için `data-i18n` ile bağlanamaz, `quiz.js` yazar), `result.score`, `tests.<id>.intro` ve `tests.<id>.copyright` (`main.js`), `meta.dateLocale`, `footer.*`, `share.text`, `result.cover`, `theme.toggle` (butonun `title`'ı, `theme.js`).
 
 ### Tutarlılık kuralları
 - ESS gibi lisanslı bir testin yönerge (`intro`), madde (`questions`), seçenek (`scale`) ve `copyright` metinleri lisanslı kaynaktan birebir alınır, düzenlenmez. Bant başlıkları yazarın yorum adlarıdır. Bant gövde metinleri (`messages.*.body`) ve `print.note` bize aittir.
 - Her test için `config.js > TESTS[id].questionCount` = `tests.<id>.questions.length`, `scaleSize` = `tests.<id>.scale.length` (her dil dosyasında).
 - `TESTS[id].scoring.weights.length` = `questionCount`.
 - `scoring.bands` kullanılıyorsa her `key` için `tests.<id>.messages.<key>` bulunmalı (ve `neutral`, skor hiçbir banda düşmezse).
-- `index.html` içindeki `data-i18n` elemanlarında İngilizce yedek metin de durur (JS yüklenmeden / JS kapalıyken görünür). İngilizce metin değişirse hem `locales/en.js` hem `index.html` güncellenir. `#test-subtitle` ve `#quiz-tip` JS ile yazıldığı için HTML'de yalnızca varsayılan testin İngilizce yedeği durur.
+- `index.html` içindeki `data-i18n` elemanlarında İngilizce yedek metin de durur (JS yüklenmeden / JS kapalıyken görünür). İngilizce metin değişirse hem `locales/en.js` hem `index.html` güncellenir (tema butonunun `aria-label` ve `title` yedeği dahil). `#test-subtitle` ve `#quiz-tip` JS ile yazıldığı için HTML'de yalnızca varsayılan testin İngilizce yedeği durur.
 
 ---
 
@@ -159,6 +166,7 @@ JS'in bağlandığı id ve attribute'lar:
 | Seçici | Kullanan |
 |---|---|
 | `#lang-list` | `langswitch.js` (bayraklar buraya basılır) |
+| `#theme-btn` | `theme.js` (varsayılan `hidden`, `initTheme` açar) |
 | `#footer` | `site.js` |
 | `.site-nav a[href="#..."]`, `#about`, `#narcolepsy`, `#test` | `nav.js` |
 | `[data-share-whatsapp]` | `share.js` |
@@ -175,6 +183,10 @@ JS'in bağlandığı id ve attribute'lar:
 | `#edit-btn`, `#restart-btn`, `#print-btn`, `#print-summary` | `result.js` |
 | `#bg` | arka plan katmanı (JS bağlı değil) |
 
+Header'ın sağ tarafı `.header-tools` içindedir: `#lang-list` + `#theme-btn`. Sarmalayıcı mobil grid düzeninde (`layout.css`, `36rem` altı) bu ikisini tek hücre yapar.
+
+`<head>` içinde, CSS'ten önce küçük bir satır içi script vardır: `localStorage["theme"]` `"dark"` ya da `"light"` ise `<html data-theme>` olarak uygular (açılışta renk çakmasını önler). `theme.js` ile aynı anahtarı okur, anahtar adı iki yerde elle senkron.
+
 Bölüm id'leri: `home`, `about`, `narcolepsy`, `test`. Menü linkleri bunlara `href` ile gider. `.brand` linki `#home`'a gider. Sayfadaki tek `<h1>` Home bölümündeki başlıktır, diğer bölüm başlıkları `<h2>`.
 
 ---
@@ -190,7 +202,7 @@ Bölüm id'leri: `home`, `about`, `narcolepsy`, `test`. Menü linkleri bunlara `
 | Bitirilmiş durum | `main.js > finished` (id → cevaplar), yalnızca bellekte |
 | Tamamlanma sayacı | Worker'da `test_<id>`, GoatCounter'da `/test-completed/<id>` |
 
-Cevaplar hiçbir yere gönderilmez ve saklanmaz. Sayfa yenilenince bellekteki her şey sıfırlanır.
+Cevaplar hiçbir yere gönderilmez ve saklanmaz. Sayfa yenilenince bellekteki her şey sıfırlanır. Cihazda yalnızca dil ve tema tercihi saklanır (`localStorage["lang"]`, `localStorage["theme"]`), ve yalnızca kullanıcı bayrağa ya da tema butonuna tıklayınca.
 
 ### `main.js`: seçili test
 - `selectTest(id)`: `quiz.setTest(id)` → `renderTestMeta()` (alt başlık, yönerge, telif) → test daha önce bitirildiyse `result.show(cevaplar, id, { revealed: true })` (kazı-kazan atlanır), bitirilmediyse quiz paneli.
@@ -231,7 +243,7 @@ Döndürür: `{ show(answers, testId, { revealed }), hide() }`.
 ### `scratch.js`: `createScratch({ canvas, onReveal, getLabel, threshold=0.5, brush=36 })`
 Döndürür: `{ reset(), revealNow(), relabel() }`.
 
-- Kapak canvas'a çizilir. Renkleri `getComputedStyle(documentElement)` üzerinden `--scratch-a`, `--scratch-b`, `--scratch-ink` okur. Yazı `getLabel()` ile gelir.
+- Kapak canvas'a çizilir. Renkleri `getComputedStyle(documentElement)` üzerinden `--scratch-a`, `--scratch-b`, `--scratch-ink` okur (çizim anında, bu yüzden tema değişince kapak kendiliğinden yenilenmez, bkz. `theme.js > onThemeChange`). Yazı `getLabel()` ile gelir.
 - Silme: `destination-out`, pointer events, `setPointerCapture`. Silinen alan oranı 250 ms'de bir ve bırakınca örneklenir (her 16. piksel). Oran `threshold`'u geçince `reveal()`.
 - `touched` bayrağı: silmeye başlanınca `relabel()` kapağı yeniden çizmez (silinmiş alan kaybolmasın).
 - Pencere boyutu değişince (silinmemişse) kapak yeniden çizilir.
@@ -253,6 +265,16 @@ Döndürür: `{ reset(), revealNow(), relabel() }`.
 - `site.js`: footer'ı `AUTHOR.name`, `AUTHOR.links[]` (`config.js`) ve `footer.role`, `footer.note` (dil dosyası) ile çizer. `statsEnabled` ise ikinci bir paragraf olarak `footer.statsNote` eklenir. `http(s)` ile başlayan linklere `target="_blank" rel="noopener"`.
 - `langswitch.js`: `LANGUAGES`'tan bayrak butonları üretir (`<button><img></button>`, `aria-label` = dilin kendi adı, `aria-pressed` = aktif dil).
 
+### `theme.js` (tema)
+Dışa aktarır: `initTheme()`, `getTheme()`, `onThemeChange(fn)`.
+
+- **Öncelik:** kullanıcının tema butonuyla yaptığı seçim (`localStorage["theme"]` = `"dark"` | `"light"`, başka değer yok sayılır) > tarayıcı/sistem ayarı (`prefers-color-scheme`).
+- **Uygulama:** seçim varsa `<html data-theme="dark|light">`. Seçim yoksa özellik hiç konmaz, renkleri `base.css` içindeki media query belirler. Seçim yokken sistem teması değişirse (`matchMedia` `change`) sayfa canlı değişir, buton ve `onThemeChange` dinleyicileri güncellenir.
+- **Buton (`#theme-btn`):** `aria-pressed` = şu an koyu mu. İkon `layout.css` ile `aria-pressed`'e göre seçilir (açıkken ay, koyuyken güneş: tıklayınca geçilecek tema). Tıklayınca ters tema seçilir, saklanır ve uygulanır. Etiket `theme.toggle` (`aria-label` `data-i18n-aria-label` ile, `title` JS ile ve dil değişince yenilenir).
+- **Açılışta çakma:** `<head>`'deki satır içi script (bölüm 4) kayıtlı seçimi CSS'ten önce uygular. Seçim yoksa CSS tek başına doğru temayı verir.
+- **`onThemeChange(fn)`:** şu an `main.js` tarafından dinlenmiyor. Dokunulmamış kazı-kazan kapağını yeni renklerle yeniden çizmek için hazır (`scratch.relabel()`).
+- Veri gönderilmez.
+
 ### `stats.js` (sayaç)
 Dışa aktarır: `statsEnabled`, `initStats()`, `trackTestCompleted(testId)`.
 Ayar: `config.js > STATS = { workerUrl, goatcounterCode, paths: { view, testDone } }`. `paths.testDone` içindeki `{id}` test kimliğiyle değişir (varsayılan `/test-completed/{id}`).
@@ -269,7 +291,7 @@ Ayar: `config.js > STATS = { workerUrl, goatcounterCode, paths: { view, testDone
 - **Sayfa açılışı:** Sayılan ziyarette tek istek: `POST <workerUrl>/tally/view` (artırır ve güncel `{views, tests, byTest}` döndürür). Sayılmayan ziyarette `GET <workerUrl>/tally`. Ek olarak GoatCounter doluysa `new Image().src = https://<kod>.goatcounter.com/count?p=/&rnd=...`.
 - **Test bitişi:** `trackTestCompleted(id)` her test için sayfa yüklemesi başına en fazla bir kez: `POST <workerUrl>/tally/test/<id>` (dönen sayılarla kutu güncellenir) ve GoatCounter'a `p=/test-completed/<id>`. Aynı testin cevaplarını düzenleyip yeniden bitirmek tekrar saymaz, farklı bir test ayrıca sayılır.
 - **Home kutusu:** "tamamlanan test" tüm testlerin toplamıdır (`tests`). Test başına sayılar yanıtta `byTest` olarak gelir, şu an ekranda gösterilmiyor.
-- **Gönderilen veri:** yalnızca "sayfa açıldı" / "şu test bitti" olayı. Cevap, skor, dil, referrer, başlık gönderilmez. Worker'a giden istekte gövde ve özel başlık yoktur (CORS ön isteği gerekmez).
+- **Gönderilen veri:** yalnızca "sayfa açıldı" / "şu test bitti" olayı. Cevap, skor, dil, tema, referrer, başlık gönderilmez. Worker'a giden istekte gövde ve özel başlık yoktur (CORS ön isteği gerekmez).
 - **Hata** (ağ, 403, bozuk yanıt): konsola uyarı yazılır, kutu gizli kalır, sayfa çalışmaya devam eder. İki sayı da 0 ise kutu gösterilmez.
 - Sayılar `Intl.NumberFormat(t("meta.dateLocale"))` ile yazılır, dil değişince yeniden yazılır.
 
@@ -300,7 +322,10 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 ## 7. CSS yapısı
 
 ### `base.css`
-- Renk değişkenleri `:root`'ta, koyu mod `@media (prefers-color-scheme: dark)` ile aynı değişkenleri yeniden tanımlar. Tema anahtarı yok.
+- Renk değişkenleri `:root`'ta (açık tema). Koyu tema iki yoldan gelir ve ikisinde de aynı değişkenler yeniden tanımlanır (elle senkron):
+  1. `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }`: kullanıcı seçim yapmadıysa sistem ayarı, açık seçtiyse uygulanmaz.
+  2. `:root[data-theme="dark"] { ... }`: kullanıcı koyu seçtiyse (sistem açık olsa da).
+- `color-scheme` her iki temada `:root`'ta açıkça verilir (kaydırma çubuğu, form elemanları temaya uyar). `<meta name="color-scheme">` yedek olarak durur.
 - Değişkenler: `--bg --surface --text --muted --accent --accent-strong --accent-soft --on-accent --border --warm --danger --scratch-a --scratch-b --scratch-ink --radius --maxw --header-h --font --font-serif`.
 - `--header-h` varsayılan `3.5rem`. `layout.css` içinde `max-width: 36rem` altında `5.4rem`. `scroll-padding-top` bu değişkene bağlı.
 - `[hidden] { display: none !important }` global.
@@ -311,12 +336,13 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 
 ### `layout.css`
 - `.container`: `max-width: var(--maxw)`, yatay padding.
-- `.site-header`: fixed, yarı saydam `color-mix` + `backdrop-filter`. İçi flex: `.brand` · `.site-nav` · `.lang-list`.
+- `.site-header`: fixed, yarı saydam `color-mix` + `backdrop-filter`. İçi flex: `.brand` · `.site-nav` · `.header-tools` (`.lang-list` + `.theme-btn`).
 - `.lang-list` / `.lang-btn`: yuvarlak bayrak, pasif `opacity .55`, aktif (`aria-pressed="true"`) tam opak + çerçeve.
+- `.theme-btn`: bayrakla aynı boyutta (`1.9rem`) yuvarlak, ince çerçeveli buton. `.icon-moon` / `.icon-sun` iki SVG'si `aria-pressed`'e göre biri gösterilir (`aria-pressed="true"` = koyu → güneş).
 - `.section .container { text-align: center }`: sayfa ortalaması buradan. `.row` `justify-content: center`.
 - `.section.section-first` (Home): `padding-top: var(--header-h)`, alt padding yok. Seçici bilerek iki sınıflı: mobildeki `.section` padding'ini ezmek için.
 - `.hero`: Home içeriği, `min-height: 100svh - header`, dikey ortalı flex. `.hero-title`, `.stats`, `.stat`, `.stat-num`, `.stat-label`.
-- Breakpoint `36rem`: header grid olur (1. satır isim + bayraklar, 2. satır menü), `--header-h` büyür.
+- Breakpoint `36rem`: header grid olur (1. satır isim + `.header-tools`, 2. satır menü), `--header-h` büyür.
 - Breakpoint `30rem`: font ve boşluk küçültme.
 - Footer sınıfları: `.site-footer .author-name .author-role .author-links .footer-note`.
 
@@ -339,8 +365,9 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 | Yapılacak | Değişecek yer |
 |---|---|
 | Metin düzenleme | `js/locales/<dil>.js` (İngilizce `data-i18n` metinleri için ayrıca `index.html` yedeği) |
-| Yeni dil ekleme | `js/locales/<kod>.js` + `assets/flags/<kod>.svg` + `languages.js` içine bir satır. Her dilde `tests.<id>` blokları da çevrilir. |
+| Yeni dil ekleme | `js/locales/<kod>.js` + `assets/flags/<kod>.svg` + `languages.js` içine bir satır. Her dilde `tests.<id>` blokları da çevrilir. Tarayıcı dili eşlemesi otomatik çalışır. |
 | Varsayılan dili değiştirme | `languages.js > DEFAULT_LANG` (yedek HTML metni de o dile uyarlanmalı) |
+| Tarayıcı dili eşleme mantığı | `i18n.js > fromBrowser`, öncelik sırası `initI18n` |
 | Yazar adı, linkler | `config.js > AUTHOR` |
 | Yazar açıklaması, footer notu | `locales/*.js > footer` |
 | Soru metni düzenleme | `locales/*.js > tests.<id>.questions` |
@@ -355,11 +382,15 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 | Seçenek numarası 0'dan / 1'den başlasın | `config.js > TESTS[id].keyBase` |
 | Yeni test ekleme | aşağıdaki "Yeni test ekleme" |
 | Kazı-kazan davranışı | `scratch.js` (`threshold`, `brush`), renkler `base.css` (`--scratch-*`) |
-| Renk, font, ölçü | `base.css` `:root` (ve koyu mod bloğu) |
+| Renk, font, ölçü | `base.css` `:root` ve koyu tema (iki yerde: media query bloğu ve `:root[data-theme="dark"]`, elle senkron) |
+| Tema butonu (ikon, yer) | `index.html > #theme-btn` + `layout.css > .theme-btn` |
+| Tema butonu etiketi | `locales/*.js > theme.toggle` (+ `index.html` İngilizce yedeği) |
+| Tema saklama anahtarı | `theme.js > STORAGE_KEY` ve `index.html > <head>` satır içi script (iki yerde) |
+| Tema değişince bir şey yapma | `theme.js > onThemeChange(fn)` (ör. `main.js` içinden `scratch.relabel()`) |
 | Arka plan | `background.css` + `index.html > #bg` |
 | Yeni bölüm ekleme | `index.html` (section id) + `nav` linki + `locales > nav.*` anahtarı |
 | Yeni yerelleştirilen HTML metni | elemana `data-i18n="anahtar"` + tüm dil dosyalarına anahtar |
-| Menü/header düzeni | `layout.css` (`--header-h`, `36rem` breakpoint) |
+| Menü/header düzeni | `layout.css` (`--header-h`, `.header-tools`, `36rem` breakpoint) |
 | PDF çıktısı | `print.css` + `result.js > renderSummary` (yeni bölüm eklenirse `print.css` gizleme listesine de ekle) |
 | Sayı kutusunu açma / kapama | `config.js > STATS.workerUrl` (boş = kapalı) |
 | GoatCounter arka plan sayımını açma / kapama | `config.js > STATS.goatcounterCode` (boş = kapalı) |
@@ -393,5 +424,5 @@ Test seçici, quiz, sonuç, PDF özeti ve sayaç test kimliğine (`id`) göre ç
 2. **Her `js/locales/*.js > tests.<id>`**: `name`, `subtitle`, `questions[]`, `scale[]`, `messages.<her band key>` (bant biçiminde `neutral` gerekmez, `threshold` biçiminde gerekir), `print.title`, `print.note`; isteğe bağlı `intro[]` ve `copyright`. Soru ve seçenek sayıları 1. adımla aynı olmalı. Metinler telifli bir ölçekse lisans ve lisanslı çeviri gerekir, lisanslı metinler birebir kopyalanır (ESS örneği: `tests.ess`).
 3. **`worker/src/index.js > TEST_IDS`**: id'yi ekle, Worker'ı yeniden yayınla (`wrangler deploy`). Eklenmezse test bitişi Worker'dan 404 alır (sayfa bozulmaz, konsola uyarı yazılır, o test Worker'da sayılmaz). D1 şemasında değişiklik gerekmez, satır ilk sayımda oluşur.
 4. **Seçici otomatik görünür**: `TESTS` içinde 2 test olunca `#test-switch` açılır, buton etiketi `tests.<id>.name`.
-5. **Metin güncellemeleri (isteğe bağlı, içerik)**: `about.p2` ve `home.tagline` "5 soruluk SNS" diyor, `narcolepsy.body` içine yeni testi anlatan paragraf, `references.js`'e kaynaklar, `footer.note` gerekiyorsa.
+5. **Metin güncellemeleri (isteğe bağlı, içerik)**: `about.p2` ve `home.tagline` yeni testi de anlatacak şekilde, `narcolepsy.body` içine yeni testi anlatan paragraf, `references.js`'e kaynaklar, `footer.note` gerekiyorsa.
 6. **Kontrol**: `TESTS[id]` ile dil dosyalarındaki uzunluk ve anahtarlar tutarlı mı (bölüm 3, tutarlılık kuralları), her iki dilde testi bitir, test değiştirince cevapların ve sonucun korunduğunu gör, PDF özetini aç.

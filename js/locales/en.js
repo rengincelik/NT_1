@@ -25,10 +25,10 @@ export default {
   },
 
 	about: {
-		lead: "For as long as I can remember, I was constantly exhausted and sleepbound. I could fall asleep anytime, anywhere. Yet every time I saw a doctor, I got the exact same response: 'Everything looks fine, nothing is wrong.'",
-		big: "In the end, I finally found the answer: I was right all along—there was a real problem.",
-		p1: "I built this page for anyone who might be in the exact same boat. Below, you'll find two screening tests. The Epworth Scale (ESS) measures general daytime sleepiness, while the Swiss Narcolepsy Scale (SNS) specifically targets Type 1 Narcolepsy symptoms. These tools are not diagnostic, but show a strong correlation in clinical cases.",
-		p2: "Sleep is a foundational pillar of health, yet it's often the first thing we overlook. If you have even a passing suspicion about your daytime exhaustion, taking these short tests might give you some clarity. If your results raise a red flag, consulting a specialist is the best next step. You can find a detailed breakdown of Narcolepsy further down the page."
+		lead: "For as long as I can remember, I was constantly exhausted and sleepy. I could fall asleep anytime, anywhere. Yet every time I saw a doctor, I got the exact same response: 'Everything looks fine, nothing is wrong.'",
+		big: "In the end, I finally found the answer: I was right all along, there was a real problem.",
+		p1: "I built this page for anyone who might be in the same boat. Below, you'll find two screening tests. The Epworth Sleepiness Scale (ESS) measures general daytime sleepiness, while the Swiss Narcolepsy Scale (SNS) focuses specifically on Type 1 narcolepsy symptoms. These tests don't diagnose anything; they only help you judge whether it's worth seeing a specialist.",
+		p2: "Sleep matters for health, yet it's often overlooked. If you have even a passing suspicion about your daytime exhaustion, these short tests might give you some clarity. Excessive sleepiness can have many different causes, so if your symptoms persist, whatever your results, I'd recommend seeing a specialist. You can find a more detailed breakdown of narcolepsy further down the page."
 	},
   home: {
     tagline: "Swiss Narcolepsy Scale (SNS) · about 2 minutes",
@@ -200,7 +200,6 @@ export default {
 
   share: {
     button: "Share on WhatsApp",
-    text: "A 2-minute narcolepsy screening. It took me 15 years to notice it in myself, maybe it will help you:",
   },
 
   footer: {

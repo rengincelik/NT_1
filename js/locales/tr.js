@@ -26,10 +26,10 @@ export default {
   },
 
 	about: {
-		lead: "Kendimi bildim bileli aşırı yorgun ve uykuluydum. Yer, zaman fark etmeksizin her an, her yerde uyuyabiliyordum. Ne zaman doktora gitsem hep aynı yanıtı aldım: 'Tahlillerin temiz, bir sorunun yok.'",
+		lead: "Kendimi bildim bileli aşırı yorgun ve uykuluydum. Yer ve zaman fark etmeksizin her an uyuyabiliyordum. Ne zaman doktora gitsem hep aynı yanıtı aldım: 'Tahlillerin temiz, bir sorunun yok.'",
 		big: "Sonunda gerçeği öğrendim: Haklıymışım, ortada gerçekten ciddi bir problem varmış.",
-		p1: "Bu siteyi benimle benzer durumda olan ve 'bende bir gariplik var' diyen kişiler için hazırladım. Aşağıda 2 farklı tarama testi göreceksiniz. Epworth (ESS) genel gün içi uykululuk seviyenizi ölçerken, İsviçre Narkolepsi Ölçeği (SNS) özellikle Tip 1 Narkolepsi semptomlarına odaklanır. Bu testler teşhis koymaz ama klinik durumlarda yüksek paralellik gösterir.",
-		p2: "Uyku sağlığımızın en kritik ama en çok ihmal edilen parçası. Eğer tükenmişliğinizle ilgili en ufak bir şüpheniz varsa, bu testleri çözmek size bir fikir verebilir. Sonuçlarınız şüphe uyandırırsa bir uzmana görünmekte fayda var. Narkolepsi hakkında daha detaylı açıklamayı ise sayfanın devamında bulabilirsiniz."
+		p1: "Bu siteyi benimle benzer durumda olan, 'bende bir gariplik var' diyen kişiler için hazırladım. Aşağıda iki tarama testi göreceksiniz. Epworth (ESS) gün içi genel uykululuk düzeyinizi ölçer; İsviçre Narkolepsi Ölçeği (SNS) ise özellikle Tip 1 Narkolepsi belirtilerine odaklanır. Bu testler teşhis koymaz, yalnızca bir uzmana görünmeniz gerekip gerekmediği konusunda fikir verir.",
+		p2: "Uyku, sağlığımızın önemli ama sıkça ihmal edilen bir parçası. Gün içindeki aşırı yorgunluğunuzla ilgili en ufak bir şüpheniz varsa bu testler size bir fikir verebilir. Aşırı uykululuğun birçok farklı nedeni olabilir; sonuçlarınız ne olursa olsun şikâyetleriniz sürüyorsa bir uzmana görünmenizi öneririm. Narkolepsi hakkında daha ayrıntılı bilgiyi sayfanın devamında bulabilirsiniz."
 	},
 
   home: {
@@ -202,7 +202,6 @@ export default {
 
   share: {
     button: "WhatsApp'ta paylaş",
-    text: "2 dakikada narkolepsi ön taraması. Kendimde fark etmem 15 yıl sürdü, belki sana da yardımı olur:",
   },
 
   footer: {
