@@ -85,9 +85,15 @@
     <section id="test" class="section">
       <div class="container">
         <h2 id="test-title" data-i18n="test.title">Test yourself</h2>
-        <p class="muted" data-i18n="test.subtitle">Swiss Narcolepsy Scale (SNS) · about 2 minutes</p>
+        <!-- testswitch.js doldurur; tek test varsa gizli kalır -->
+        <div class="row" id="test-switch" role="group" data-i18n-aria-label="test.switchLabel" aria-label="Choose a test" hidden></div>
+        <!-- main.js seçili testin alt başlığını yazar (tests.<id>.subtitle) -->
+        <p class="muted" id="test-subtitle">Swiss Narcolepsy Scale (SNS) · about 2 minutes</p>
 
         <div id="quiz-panel" class="panel">
+          <!-- main.js yazar (tests.<id>.intro[]), yönergesi olmayan testte gizli kalır -->
+          <div id="test-intro" class="muted" hidden></div>
+
           <div class="progress">
             <p id="progress-text" class="progress-text" aria-live="polite">1 / 5</p>
             <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
@@ -103,7 +109,8 @@
             <button type="button" id="prev-btn" class="btn btn-ghost" data-i18n="test.prev">← Back</button>
             <button type="button" id="next-btn" class="btn">Next →</button>
           </div>
-          <p class="muted tip" data-i18n="test.tip">Answer with keys 1–5, move with the arrow keys, or swipe left and right.</p>
+          <!-- quiz.js yazar (test.tip, {max} = seçenek sayısı), bu yüzden data-i18n yok -->
+          <p id="quiz-tip" class="muted tip">Answer with keys 1–5, move with the arrow keys, or swipe left and right.</p>
         </div>
 
         <div id="result-panel" class="panel" hidden>
@@ -130,6 +137,9 @@
 
           <div id="print-summary" class="print-summary"></div>
         </div>
+
+        <!-- main.js yazar (tests.<id>.copyright), telif satırı olmayan testte gizli kalır -->
+        <p id="test-copyright" class="muted tip" hidden></p>
       </div>
     </section>
   </main>

@@ -1,75 +1,94 @@
-// Adım adım test: tek soru ekranı, iki yöne gezinme (buton, ok tuşları, kaydırma), 1-5 tuşları.
-// Soru ve etiket metinleri i18n'den gelir; dil değişince yerinde güncellenir, cevaplar korunur.
+// Adım adım test: tek soru ekranı, iki yöne gezinme (buton, ok tuşları, kaydırma), sayı tuşlarıyla seçim
+// (numaralar tests[id].keyBase'den başlar, varsayılan 1).
+// Birden fazla testi tek arayüzde taşır: setTest(id) soru ekranlarını o testin soru/seçenek sayısına göre yeniden kurar.
+// Her testin cevapları ve kaldığı soru ayrı saklanır (sadece bellekte), test değiştirince kaybolmaz.
+// Metinler i18n'den gelir (tests.<id>.questions / scale); dil değişince yerinde güncellenir, cevaplar korunur.
 import { t, onLangChange } from "./i18n.js";
 
 export function createQuiz({
   root, track, viewport, prevBtn, nextBtn,
-  progressText, progressFill, progressBar,
-  count, scaleSize, onFinish,
+  progressText, progressFill, progressBar, tipEl,
+  tests, initialTest, onFinish,
 }) {
-  const last = count - 1;
-  const answers = new Array(count).fill(null);
-  const slides = [];
-  const questionEls = [];
-  const optionTextEls = []; // [soru][değer]
+  // id → { answers: (null|number)[], index }
+  const store = new Map();
+
+  let id = null;          // aktif test
+  let count = 0;
+  let scaleSize = 0;
+  let keyBase = 1;        // seçenek numarasının başlangıcı (1: 1..n, ESS: 0..n-1)
+  let last = 0;
+  let answers = [];
   let index = 0;
+  let slides = [];
+  let questionEls = [];
+  let optionTextEls = []; // [soru][değer]
   let autoAdvance = false; // sadece fare/dokunma ve sayı tuşuyla seçince otomatik ilerle
 
-  // --- Render (metinler refreshText'te dolar) ---
-  for (let i = 0; i < count; i++) {
-    const slide = document.createElement("div");
-    slide.className = "slide";
+  // --- Render: aktif testin soru ekranlarını kurar (metinler refreshText'te dolar) ---
+  function build() {
+    track.replaceChildren();
+    slides = [];
+    questionEls = [];
+    optionTextEls = [];
 
-    const q = document.createElement("p");
-    q.className = "question-text";
-    q.id = `q${i}-label`;
+    for (let i = 0; i < count; i++) {
+      const slide = document.createElement("div");
+      slide.className = "slide";
 
-    const group = document.createElement("div");
-    group.className = "options";
-    group.setAttribute("role", "radiogroup");
-    group.setAttribute("aria-labelledby", q.id);
+      const q = document.createElement("p");
+      q.className = "question-text";
+      q.id = `q${i}-label`;
 
-    const texts = [];
-    for (let v = 0; v < scaleSize; v++) {
-      const wrap = document.createElement("div");
-      wrap.className = "option";
+      const group = document.createElement("div");
+      group.className = "options";
+      group.setAttribute("role", "radiogroup");
+      group.setAttribute("aria-labelledby", q.id);
 
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = `q${i}`;
-      input.id = `q${i}-${v}`;
-      input.value = String(v);
+      const texts = [];
+      for (let v = 0; v < scaleSize; v++) {
+        const wrap = document.createElement("div");
+        wrap.className = "option";
 
-      const lab = document.createElement("label");
-      lab.htmlFor = input.id;
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `q${i}`;
+        input.id = `q${i}-${v}`;
+        input.value = String(v);
+        input.checked = answers[i] === v;
 
-      const key = document.createElement("span");
-      key.className = "opt-key";
-      key.textContent = String(v + 1);
+        const lab = document.createElement("label");
+        lab.htmlFor = input.id;
 
-      const txt = document.createElement("span");
-      texts.push(txt);
+        const key = document.createElement("span");
+        key.className = "opt-key";
+        key.textContent = String(v + keyBase);
 
-      lab.append(key, txt);
-      wrap.append(input, lab);
-      group.appendChild(wrap);
+        const txt = document.createElement("span");
+        texts.push(txt);
+
+        lab.append(key, txt);
+        wrap.append(input, lab);
+        group.appendChild(wrap);
+      }
+
+      slide.append(q, group);
+      track.appendChild(slide);
+      slides.push(slide);
+      questionEls.push(q);
+      optionTextEls.push(texts);
     }
-
-    slide.append(q, group);
-    track.appendChild(slide);
-    slides.push(slide);
-    questionEls.push(q);
-    optionTextEls.push(texts);
   }
 
   // --- Metin ve durum ---
   function refreshText() {
     for (let i = 0; i < count; i++) {
-      questionEls[i].textContent = t(`questions.${i}`);
+      questionEls[i].textContent = t(`tests.${id}.questions.${i}`);
       for (let v = 0; v < scaleSize; v++) {
-        optionTextEls[i][v].textContent = t(`scale.${v}`);
+        optionTextEls[i][v].textContent = t(`tests.${id}.scale.${v}`);
       }
     }
+    if (tipEl) tipEl.textContent = t("test.tip", { min: keyBase, max: keyBase + scaleSize - 1 });
     update();
   }
 
@@ -91,6 +110,7 @@ export function createQuiz({
   function go(n) {
     const focusWasInTrack = track.contains(document.activeElement);
     index = Math.max(0, Math.min(last, n));
+    store.get(id).index = index;
     track.style.transform = `translateX(${-index * 100}%)`;
     slides.forEach((s, k) => {
       const active = k === index;
@@ -103,7 +123,7 @@ export function createQuiz({
 
   function next() {
     if (answers[index] === null) return;
-    if (index === last) onFinish(answers.slice());
+    if (index === last) onFinish(answers.slice(), id);
     else go(index + 1);
   }
 
@@ -125,7 +145,8 @@ export function createQuiz({
     update();
 
     if (advance && i === index && i < last) {
-      setTimeout(() => { if (index === i) go(i + 1); }, 260);
+      const forTest = id;
+      setTimeout(() => { if (id === forTest && index === i) go(i + 1); }, 260);
     }
   });
 
@@ -143,8 +164,9 @@ export function createQuiz({
       prev();
     } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       autoAdvance = false; // yön tuşuyla gezerken sıçratma
-    } else if (/^[1-9]$/.test(e.key)) {
-      const v = Number(e.key) - 1;
+    } else if (/^[0-9]$/.test(e.key)) {
+      const v = Number(e.key) - keyBase;
+      if (v < 0) return; // ör. 1'den başlayan testte "0" tuşu
       const input = slides[index].querySelector(`input[value="${v}"]`);
       if (!input) return;
       if (input.checked) {
@@ -181,15 +203,44 @@ export function createQuiz({
   viewport.addEventListener("pointercancel", () => { tracking = false; });
 
   // --- Dışarıya açılan ---
+  // Aktif testi değiştirir. Daha önce cevaplanmışsa cevaplar ve kalınan soru geri gelir.
+  function setTest(newId) {
+    const def = tests[newId];
+    if (!def) throw new Error(`Bilinmeyen test: ${newId}`);
+    if (newId === id) return;
+
+    id = newId;
+    count = def.questionCount;
+    scaleSize = def.scaleSize;
+    keyBase = def.keyBase ?? 1;
+    last = count - 1;
+
+    if (!store.has(id)) store.set(id, { answers: new Array(count).fill(null), index: 0 });
+    answers = store.get(id).answers;
+    index = store.get(id).index;
+    autoAdvance = false;
+
+    build();
+    refreshText();
+    go(index);
+  }
+
+  // Aktif testin cevaplarını siler, ilk soruya döner
   function reset() {
     answers.fill(null);
     track.querySelectorAll("input").forEach((i) => { i.checked = false; });
     go(0);
   }
 
-  onLangChange(refreshText);
-  refreshText();
-  go(0);
+  onLangChange(() => { if (id) refreshText(); });
+  setTest(initialTest);
 
-  return { goTo: go, reset, lastIndex: last };
+  return {
+    setTest,
+    goTo: go,
+    reset,
+    get lastIndex() { return last; },
+    get testId() { return id; },
+    answersOf: (testId) => store.get(testId)?.answers.slice() ?? null,
+  };
 }

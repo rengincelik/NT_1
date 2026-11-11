@@ -83,23 +83,109 @@ export default {
 
   test: {
     title: "Test yourself",
-    subtitle: "Swiss Narcolepsy Scale (SNS) · about 2 minutes",
+    switchLabel: "Choose a test",
     progress: "Question {n} / {total}",
     prev: "← Back",
     next: "Next →",
     finish: "See result",
-    tip: "Answer with keys 1–5, move with the arrow keys, or swipe left and right.",
+    tip: "Answer with keys {min}–{max}, move with the arrow keys, or swipe left and right.",
   },
 
-  questions: [
-    "Do you find yourself suddenly falling asleep during the day?",
-    "When you get excited, laugh, or get angry, do you feel a sudden loss of muscle strength (knees buckling, jaw dropping, etc.)?",
-    "Is your sleep at night often interrupted? Do you have trouble sleeping through the night?",
-    "Do you have episodes where you can't move your body while falling asleep or waking up (sleep paralysis)?",
-    "Do you experience very vivid, dream-like, frightening images or sounds (hallucinations) while falling asleep or waking up?",
-  ],
+  // Testler: her test kendi adı, alt başlığı, soruları, seçenekleri, sonuç mesajları ve PDF özetiyle ayrı bir blok.
+  // Yeni test: config.js > TESTS'e ekle, buraya tests.<id> bloğu ekle (ARCHITECTURE.md > Yeni test ekleme).
+  tests: {
+    sns: {
+      name: "Swiss Narcolepsy Scale (SNS)",
+      subtitle: "Swiss Narcolepsy Scale (SNS) · about 2 minutes",
 
-  scale: ["Never", "Rarely", "Sometimes", "Often", "Always"],
+      questions: [
+        "Do you find yourself suddenly falling asleep during the day?",
+        "When you get excited, laugh, or get angry, do you feel a sudden loss of muscle strength (knees buckling, jaw dropping, etc.)?",
+        "Is your sleep at night often interrupted? Do you have trouble sleeping through the night?",
+        "Do you have episodes where you can't move your body while falling asleep or waking up (sleep paralysis)?",
+        "Do you experience very vivid, dream-like, frightening images or sounds (hallucinations) while falling asleep or waking up?",
+      ],
+
+      scale: ["Never", "Rarely", "Sometimes", "Often", "Always"],
+
+      messages: {
+        suspect: {
+          title: "Your score points to a possible concern",
+          body: "Don't ignore it. Don't put off booking an appointment with a neurologist or sleep specialist. You're not alone.",
+        },
+        unlikely: {
+          title: "Your score is below the threshold",
+          body: "That doesn't mean nothing is going on. If your symptoms continue, talk to a specialist.",
+        },
+        neutral: {
+          title: "Your answers are in",
+          body: "The threshold that interprets your score hasn't been added yet. If your symptoms bother you, talk to a neurologist or sleep specialist. You're not alone.",
+        },
+      },
+
+      print: {
+        title: "Narcolepsy screening answers",
+        note: "This summary is not a diagnosis. It is prepared to share with a neurologist or sleep specialist.",
+      },
+    },
+
+    ess: {
+      name: "Epworth Sleepiness Scale (ESS)",
+      subtitle: "Epworth Sleepiness Scale (ESS) · about 2 minutes",
+
+      // Yönerge ve maddeler lisanslı metindir (Mapi Research Trust, ESS_AU1.0_eng-US2). Değiştirme.
+      intro: [
+        "How likely are you to doze off or fall asleep in the following situations, in contrast to just feeling tired?",
+        "This refers to your usual way of life recently.",
+        "Even if you haven’t done some of these things recently, try to figure out how they would have affected you.",
+        "It is important that you answer each item as best as you can.",
+      ],
+
+      questions: [
+        "Sitting and reading",
+        "Watching TV",
+        "Sitting inactive in a public place (e.g., a theater or a meeting)",
+        "As a passenger in a car for an hour without a break",
+        "Lying down to rest in the afternoon when circumstances permit",
+        "Sitting and talking to someone",
+        "Sitting quietly after a lunch without alcohol",
+        "In a car, while stopped for a few minutes in traffic",
+      ],
+
+      scale: ["No chance of dozing", "Slight chance of dozing", "Moderate chance of dozing", "High chance of dozing"],
+
+      // Bant başlıkları yazarın yorum adlarıdır (ESS Scaling and Scoring v2.0). Gövde metinleri bize aittir, lisanslı değildir.
+      messages: {
+        lowerNormal: {
+          title: "Lower normal daytime sleepiness",
+          body: "Your score is in the lower part of the normal range. If you still feel unusually sleepy during the day, or have other symptoms that worry you, talk to a doctor. A score on its own does not rule anything out.",
+        },
+        higherNormal: {
+          title: "Higher normal daytime sleepiness",
+          body: "Your score is in the normal range, on the higher side. Many healthy people score here. If sleepiness gets in the way of your daily life, mention it to a doctor.",
+        },
+        mild: {
+          title: "Mild excessive daytime sleepiness",
+          body: "Your score points to mild excessive daytime sleepiness. It has many possible causes, such as not sleeping enough or sleep disorders like sleep apnea. It is worth talking to a doctor, especially if it keeps happening.",
+        },
+        moderate: {
+          title: "Moderate excessive daytime sleepiness",
+          body: "Your score points to moderate excessive daytime sleepiness. It has many possible causes, and a doctor or sleep specialist can look into them. Be careful when driving, and don't drive if you feel drowsy.",
+        },
+        severe: {
+          title: "Severe excessive daytime sleepiness",
+          body: "Your score points to severe excessive daytime sleepiness. Please see a doctor or sleep specialist soon. Don't drive or use machinery when you feel drowsy.",
+        },
+      },
+
+      print: {
+        title: "Epworth Sleepiness Scale answers",
+        note: "This summary is not a diagnosis. The ESS measures general daytime sleepiness and does not show its cause. It is prepared to share with a doctor or sleep specialist.",
+      },
+
+      copyright: "ESS © MW Johns 1990-1997. Used under License",
+    },
+  },
 
   result: {
     cover: "Scratch to reveal",
@@ -109,31 +195,12 @@ export default {
     pdfTip: "In the window that opens, choose \"Save as PDF\" as the destination. You get a summary of your answers you can take to a doctor.",
     edit: "Edit answers",
     restart: "Start over",
+    score: "Score: {score} / {max}",
   },
 
   share: {
     button: "Share on WhatsApp",
     text: "A 2-minute narcolepsy screening. It took me 15 years to notice it in myself, maybe it will help you:",
-  },
-
-  messages: {
-    suspect: {
-      title: "Your score points to a possible concern",
-      body: "Don't ignore it. Don't put off booking an appointment with a neurologist or sleep specialist. You're not alone.",
-    },
-    unlikely: {
-      title: "Your score is below the threshold",
-      body: "That doesn't mean nothing is going on. If your symptoms continue, talk to a specialist.",
-    },
-    neutral: {
-      title: "Your answers are in",
-      body: "The threshold that interprets your score hasn't been added yet. If your symptoms bother you, talk to a neurologist or sleep specialist. You're not alone.",
-    },
-  },
-
-  print: {
-    title: "Narcolepsy screening answers",
-    note: "This summary is not a diagnosis. It is prepared to share with a neurologist or sleep specialist.",
   },
 
   footer: {

@@ -3,7 +3,9 @@
 // Gösterilen sayılar ve asıl sayım: kendi Worker'ımız (worker/ klasörü). STATS.workerUrl boşsa kutu görünmez.
 // GoatCounter (isteğe bağlı, arka planda): STATS.goatcounterCode doluysa sadece sayım gönderilir, sayılar buradan OKUNMAZ.
 //
-// Ne gönderilir: sayfa açılışı ve test bitişi olayı. Cevaplar, skor, dil, referrer gönderilmez.
+// Ne gönderilir: sayfa açılışı ve test bitişi olayı (hangi test bittiği dahil). Cevaplar, skor, dil, referrer gönderilmez.
+// Her test ayrı sayılır: Worker'da test_<id> sayacı, GoatCounter'da /test-completed/<id> yolu.
+// Home'daki "tamamlanan test" kutusu tüm testlerin toplamını gösterir.
 import { STATS } from "./config.js";
 import { t, onLangChange } from "./i18n.js";
 
@@ -15,7 +17,7 @@ const gcBase = `https://${gcCode}.goatcounter.com`;
 export const statsEnabled = Boolean(workerUrl || gcCode);
 
 let counts = null;
-let completedSent = false;
+const completedSent = new Set(); // test id'leri: her test sayfa yüklemesi başına en fazla bir kez sayılır
 
 // Geliştirme ortamı, DNT/GPC açık ziyaretçi ve kendi tarayıcın (localStorage.skipgc) sayılmaz.
 function shouldTrack() {
@@ -45,9 +47,9 @@ async function callWorker(method, path) {
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
   const views = Number(data.views);
-  const tests = Number(data.tests);
+  const tests = Number(data.tests); // tüm testlerin toplamı
   if (!Number.isFinite(views) || !Number.isFinite(tests)) throw new Error("beklenmeyen yanıt");
-  return { views, tests };
+  return { views, tests, byTest: data.byTest ?? {} };
 }
 
 function render() {
@@ -80,15 +82,15 @@ export async function initStats() {
   }
 }
 
-// Sayfa yüklemesi başına en fazla bir kez sayılır (cevapları düzenleyip yeniden bitirmek tekrar saymaz)
-export function trackTestCompleted() {
-  if (completedSent) return;
-  completedSent = true;
+// Her test için sayfa yüklemesi başına en fazla bir kez sayılır (cevapları düzenleyip yeniden bitirmek tekrar saymaz)
+export function trackTestCompleted(testId) {
+  if (completedSent.has(testId)) return;
+  completedSent.add(testId);
 
-  gcHit(STATS.paths.testDone);
+  gcHit(STATS.paths.testDone.replace("{id}", testId));
 
   if (workerUrl && shouldTrack()) {
-    callWorker("POST", "/tally/test")
+    callWorker("POST", `/tally/test/${encodeURIComponent(testId)}`)
       .then((c) => { counts = c; render(); })
       .catch((err) => console.warn("Test sayısı gönderilemedi:", err.message));
   }

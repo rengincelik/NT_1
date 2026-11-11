@@ -83,23 +83,109 @@ export default {
 
   test: {
     title: "Kendini test et",
-    subtitle: "İsviçre Narkolepsi Ölçeği (SNS) · yaklaşık 2 dakika",
+    switchLabel: "Test seç",
     progress: "Soru {n} / {total}",
     prev: "← Geri",
     next: "İleri →",
     finish: "Sonucu gör",
-    tip: "1–5 tuşlarıyla cevapla, ok tuşlarıyla ya da sağa sola kaydırarak gez.",
+    tip: "{min}–{max} tuşlarıyla cevapla, ok tuşlarıyla ya da sağa sola kaydırarak gez.",
   },
 
-  questions: [
-    "Gündüz vakti kendinizi aniden uykuya dalarken buluyor musunuz?",
-    "Heyecanlandığınızda, güldüğünüzde veya öfkelendiğinizde kaslarınızda ani bir gevşeme veya güçsüzlük (diz çözülmesi, çene düşmesi vb.) hissediyor musunuz?",
-    "Gece uykularınız sık sık bölünür mü, deliksiz uyumakta zorlanır mısınız?",
-    "Uykuya dalarken veya uyanırken vücudunuzu hareket ettiremediğiniz (uyku felci) durumlar oluyor mu?",
-    "Uykuya dalarken veya uyanırken rüya benzeri, çok canlı ve korkutucu görüntüler ya da sesler (halüsinasyon) yaşar mısınız?",
-  ],
+  // Testler: her test kendi adı, alt başlığı, soruları, seçenekleri, sonuç mesajları ve PDF özetiyle ayrı bir blok.
+  // Yeni test: config.js > TESTS'e ekle, buraya tests.<id> bloğu ekle (ARCHITECTURE.md > Yeni test ekleme).
+  tests: {
+    sns: {
+      name: "İsviçre Narkolepsi Ölçeği (SNS)",
+      subtitle: "İsviçre Narkolepsi Ölçeği (SNS) · yaklaşık 2 dakika",
 
-  scale: ["Hiç", "Nadiren", "Bazen", "Sık", "Hep"],
+      questions: [
+        "Gündüz vakti kendinizi aniden uykuya dalarken buluyor musunuz?",
+        "Heyecanlandığınızda, güldüğünüzde veya öfkelendiğinizde kaslarınızda ani bir gevşeme veya güçsüzlük (diz çözülmesi, çene düşmesi vb.) hissediyor musunuz?",
+        "Gece uykularınız sık sık bölünür mü, deliksiz uyumakta zorlanır mısınız?",
+        "Uykuya dalarken veya uyanırken vücudunuzu hareket ettiremediğiniz (uyku felci) durumlar oluyor mu?",
+        "Uykuya dalarken veya uyanırken rüya benzeri, çok canlı ve korkutucu görüntüler ya da sesler (halüsinasyon) yaşar mısınız?",
+      ],
+
+      scale: ["Hiç", "Nadiren", "Bazen", "Sık", "Hep"],
+
+      messages: {
+        suspect: {
+          title: "Skorun şüpheli bir duruma işaret ediyor",
+          body: "Bunu ihmal etme. Bir nöroloji veya uyku uzmanından randevu almayı erteleme. Yalnız değilsin.",
+        },
+        unlikely: {
+          title: "Skorun eşiğin altında",
+          body: "Bu, bir sorun olmadığı anlamına gelmez. Yine de şikâyetlerin devam ediyorsa bir uzmana danış.",
+        },
+        neutral: {
+          title: "Cevapların alındı",
+          body: "Skorunu yorumlayan eşik henüz eklenmedi. Şikâyetlerin seni rahatsız ediyorsa bir nöroloji veya uyku uzmanıyla konuş. Yalnız değilsin.",
+        },
+      },
+
+      print: {
+        title: "Narkolepsi ön tarama cevapları",
+        note: "Bu özet bir teşhis değildir. Bir nöroloji veya uyku uzmanıyla paylaşmak için hazırlanmıştır.",
+      },
+    },
+
+    ess: {
+      name: "Epworth Uykululuk Ölçeği (ESS)",
+      subtitle: "Epworth Uykululuk Ölçeği (ESS) · yaklaşık 2 dakika",
+
+      // Yönerge ve maddeler lisanslı metindir (Mapi Research Trust, ESS_AU1.0_tur-TR1_10NOV2022). Değiştirme.
+      intro: [
+        "Aşağıdaki durumlarda sadece yorgun hissediyor olmak yerine, uyuklamaya ya da uykuya dalmaya ne kadar eğilimlisiniz?",
+        "Bu ankete yakın zamanlardaki olağan yaşam biçiminizi düşünerek cevap veriniz.",
+        "Bunlardan bazılarını yakın zamanda yapmamış olsanız bile, olsaydı sizi nasıl etkilemiş olacağını bulmaya çalışınız.",
+        "Her soruyu yapabileceğiniz en iyi biçimde cevaplandırmanız önemlidir.",
+      ],
+
+      questions: [
+        "Otururken ve okurken",
+        "TV seyrederken",
+        "Umumi bir yerde (örn. sinema, tiyatro ya da bir toplantıda) bir şey yapmadan otururken",
+        "Bir arabada bir saat boyunca ara vermeden yolcu olarak bulunurken",
+        "Öğleden sonra koşullar izin verdiğinde dinlenmek için uzanırken",
+        "Biriyle oturup konuşurken",
+        "Alkol almadığınız bir öğle yemeği sonrası sessizce otururken",
+        "Bir arabada, trafikte birkaç dakika duruyorken",
+      ],
+
+      scale: ["Hiç uyuklama yok", "Uyuklama ihtimali hafif", "Uyuklama ihtimali orta düzeyde", "Uyuklama ihtimali yüksek"],
+
+      // Bant başlıkları yazarın yorum adlarının karşılığıdır (ESS Scaling and Scoring v2.0). Gövde metinleri bize aittir, lisanslı değildir.
+      messages: {
+        lowerNormal: {
+          title: "Normal aralıkta, düşük gündüz uykululuğu",
+          body: "Skorun normal aralığın alt kısmında. Yine de gündüzleri alışılmadık derecede uykulu hissediyorsan ya da seni endişelendiren başka belirtiler varsa bir hekimle konuş. Tek başına bir skor hiçbir şeyi dışlamaz.",
+        },
+        higherNormal: {
+          title: "Normal aralıkta, yüksek gündüz uykululuğu",
+          body: "Skorun normal aralıkta, ama üst kısmında. Birçok sağlıklı insan bu aralıkta çıkar. Uykululuk günlük hayatını zorluyorsa bir hekime söyle.",
+        },
+        mild: {
+          title: "Hafif düzeyde aşırı gündüz uykululuğu",
+          body: "Skorun hafif düzeyde aşırı gündüz uykululuğuna işaret ediyor. Nedenleri çok olabilir: yetersiz uyku ya da uyku apnesi gibi uyku bozuklukları. Özellikle sık tekrarlıyorsa bir hekimle konuşmaya değer.",
+        },
+        moderate: {
+          title: "Orta düzeyde aşırı gündüz uykululuğu",
+          body: "Skorun orta düzeyde aşırı gündüz uykululuğuna işaret ediyor. Nedenleri çok olabilir, bir hekim ya da uyku uzmanı bunları araştırabilir. Araba kullanırken dikkatli ol, uykulu hissediyorsan kullanma.",
+        },
+        severe: {
+          title: "Ağır düzeyde aşırı gündüz uykululuğu",
+          body: "Skorun ağır düzeyde aşırı gündüz uykululuğuna işaret ediyor. Lütfen yakın zamanda bir hekime ya da uyku uzmanına başvur. Uykulu hissediyorsan araç ya da makine kullanma.",
+        },
+      },
+
+      print: {
+        title: "Epworth Uykululuk Ölçeği cevapları",
+        note: "Bu özet bir teşhis değildir. ESS genel gündüz uykululuğunu ölçer, nedenini göstermez. Bir hekim ya da uyku uzmanıyla paylaşmak için hazırlanmıştır.",
+      },
+
+      copyright: "ESS © MW Johns 1990-1997. Lisans ile kullanılır",
+    },
+  },
 
   result: {
     cover: "Silerek gör",
@@ -109,31 +195,12 @@ export default {
     pdfTip: "Açılan pencerede hedef olarak \"PDF olarak kaydet\"i seç. Doktora götürebileceğin bir cevap özeti çıkar.",
     edit: "Cevapları düzenle",
     restart: "Baştan başla",
+    score: "Skor: {score} / {max}",
   },
 
   share: {
     button: "WhatsApp'ta paylaş",
     text: "2 dakikada narkolepsi ön taraması. Kendimde fark etmem 15 yıl sürdü, belki sana da yardımı olur:",
-  },
-
-  messages: {
-    suspect: {
-      title: "Skorun şüpheli bir duruma işaret ediyor",
-      body: "Bunu ihmal etme. Bir nöroloji veya uyku uzmanından randevu almayı erteleme. Yalnız değilsin.",
-    },
-    unlikely: {
-      title: "Skorun eşiğin altında",
-      body: "Bu, bir sorun olmadığı anlamına gelmez. Yine de şikâyetlerin devam ediyorsa bir uzmana danış.",
-    },
-    neutral: {
-      title: "Cevapların alındı",
-      body: "Skorunu yorumlayan eşik henüz eklenmedi. Şikâyetlerin seni rahatsız ediyorsa bir nöroloji veya uyku uzmanıyla konuş. Yalnız değilsin.",
-    },
-  },
-
-  print: {
-    title: "Narkolepsi ön tarama cevapları",
-    note: "Bu özet bir teşhis değildir. Bir nöroloji veya uyku uzmanıyla paylaşmak için hazırlanmıştır.",
   },
 
   footer: {
