@@ -91,5 +91,11 @@ export function createResult({
   restartBtn.addEventListener("click", () => onRestart());
   onLangChange(render);
 
-  return { show, hide };
+	return {
+		show,
+		hide,
+		relabel() {
+			scratch.relabel();
+		}
+	};
 }

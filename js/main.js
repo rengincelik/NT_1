@@ -9,7 +9,7 @@ import { createResult } from "./result.js";
 import { initTestSwitch } from "./testswitch.js";
 import { initStats, trackTestCompleted } from "./stats.js";
 import { initRichText } from "./richtext.js";
-import { initTheme } from "./theme.js";
+import { initTheme, onThemeChange } from "./theme.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -127,7 +127,9 @@ initTestSwitch({
 
 renderTestMeta();
 onLangChange(renderTestMeta);
-
+onThemeChange(() => {
+	result.relabel();
+});
 function scrollToTest() {
   $("#test-title").scrollIntoView({ block: "start" });
 }
