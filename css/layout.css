@@ -130,7 +130,119 @@
 }
 
 .row { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; margin: 1.5rem 0 0; }
+/* Home istatistik kartları */
+.stats {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+	width: 100%;
+	max-width: 30rem;
+	margin: 2.5rem auto 0;
+}
 
+.stat {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: .35rem;
+	padding: 1.4rem 1rem 1.2rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+/* üstte ince vurgu çizgisi */
+.stat::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+	opacity: .85;
+}
+
+/* hafif arka plan ışıması */
+.stat::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(120% 80% at 50% 0%, var(--accent-soft), transparent 70%);
+	opacity: .6;
+	pointer-events: none;
+}
+
+.stat > * { position: relative; z-index: 1; }
+
+.stat:hover {
+	transform: translateY(-2px);
+	border-color: var(--accent);
+	box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.stat-num {
+	font-size: clamp(2rem, 9vw, 3.25rem);
+	font-weight: 700;
+	line-height: 1.05;
+	letter-spacing: -.02em;
+	color: var(--accent-strong);
+	font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+	font-size: .8rem;
+	font-weight: 600;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+@media (max-width: 30rem) {
+	.stats { gap: .75rem; margin-top: 2rem; }
+	.stat { padding: 1.1rem .75rem 1rem; }
+	.stat-label { font-size: .7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.stat { transition: none; }
+	.stat:hover { transform: none; }
+}
+/* İkon rozeti */
+.stat { gap: .5rem; padding-top: 1.6rem; }
+
+.stat-icon {
+	display: grid;
+	place-items: center;
+	width: 2.9rem;
+	height: 2.9rem;
+	margin-bottom: .2rem;
+	border-radius: 50%;
+	color: var(--on-accent);
+	background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+	box-shadow:
+			0 0 0 5px var(--accent-soft),
+			0 6px 14px color-mix(in srgb, var(--accent) 35%, transparent);
+	transition: transform .25s ease;
+}
+
+.stat:hover .stat-icon { transform: scale(1.08) rotate(-4deg); }
+
+/* ikonlar ağır gelmesin diye iki kart arasında küçük ritim farkı */
+.stat:nth-child(2) .stat-icon {
+	background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+}
+
+@media (max-width: 30rem) {
+	.stat-icon { width: 2.5rem; height: 2.5rem; }
+	.stat-icon svg { width: 20px; height: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.stat-icon { transition: none; }
+	.stat:hover .stat-icon { transform: none; }
+}
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--border);

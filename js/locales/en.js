@@ -31,7 +31,7 @@ export default {
 		p2: "Sleep matters for health, yet it's often overlooked. If you have even a passing suspicion about your daytime exhaustion, these short tests might give you some clarity. Excessive sleepiness can have many different causes, so if your symptoms persist, whatever your results, I'd recommend seeing a specialist. You can find a more detailed breakdown of narcolepsy further down the page."
 	},
   home: {
-    tagline: "Swiss Narcolepsy Scale (SNS) · about 2 minutes",
+    tagline: "Swiss Narcolepsy Scale (SNS)",
     start: "Take the test",
     views: "page views",
     tests: "tests completed",

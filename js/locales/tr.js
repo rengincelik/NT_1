@@ -2,7 +2,7 @@
 export default {
   meta: {
     title: "Narkolepsi",
-    description: "2 dakikada narkolepsi ön taraması (İsviçre Narkolepsi Ölçeği).",
+    description: "Narkolepsi ön taraması (İsviçre Narkolepsi Ölçeği).",
     dateLocale: "tr-TR",
   },
 
