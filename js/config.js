@@ -14,16 +14,18 @@ export const AUTHOR = {
 // Anahtar (id) aynı zamanda dil dosyasındaki yolu (tests.<id>.*) ve Worker'daki sayaç adını belirler.
 //
 // Dil dosyalarında tests.<id>.questions ve tests.<id>.scale dizileri questionCount / scaleSize ile aynı uzunlukta olmalı.
-// Cevap değeri = seçeneğin sırası (0'dan başlar). scoring.weights.length = questionCount.
 //
 // İsteğe bağlı alanlar:
 //   keyBase   : seçenek numarasının başladığı değer ve sayı tuşu eşlemesi (varsayılan 1: 1..n). ESS gibi 0'dan başlayan ölçekler için 0.
 //   showScore : true ise sonuçta ve PDF özetinde "Skor: X / Y" gösterilir (ağırlıklı toplam, en yüksek skor ağırlıklardan hesaplanır).
-// Metin tarafında isteğe bağlı: tests.<id>.intro[] (sorulardan önce gösterilen yönerge paragrafları),
+//   scoring.constant     : formüldeki sabit terim (varsayılan 0).
+//   scoring.answerOffset : cevap değerine eklenen sayı; ölçek 1'den başlıyorsa 1 (varsayılan 0).
+// Metin tarafında isteğe bağlı: tests.<id>.scales.<soru>.<değer> (tek bir sorunun kendi seçenekleri), tests.<id>.intro[] (sorulardan önce gösterilen yönerge paragrafları),
 // tests.<id>.copyright (test panelinin altında ve PDF özetinde gösterilen telif/lisans satırı).
 //
 // scoring iki biçimden birini alır (scoring.js):
-//   { weights, threshold }  → "suspect" | "unlikely" ("neutral": threshold null iken)
+//   { weights, threshold }  → "suspect" | "unlikely" ("neutral": threshold null iken). Skor >= threshold şüpheli;
+//                             suspectBelow: true ise skor < threshold şüpheli.
 //   { weights, bands }      → bands: [{ min, key }, ...] artan min sırasıyla; skor >= min olan son bandın key'i kullanılır.
 //                             key, dil dosyasında tests.<id>.messages.<key> olmalı.
 //
@@ -32,11 +34,17 @@ export const TESTS = {
   sns: {
     questionCount: 5,
     scaleSize: 5,
-    // TODO: weights ve threshold GEÇİCİ. Orijinal SNS makalesinden (Sturzenegger ve ark., 2013)
-    // doğrulanmadan kullanma. threshold null iken sayfa "şüpheli / değil" kararı vermez.
+    // Swiss Narcolepsy Scale. Sorular ve formül: Sturzenegger ve ark., Clin Transl Neurosci 2018;2:1-5 (Tablo 1).
+    // Türkçe geçerlik çalışması aynı formülü kullanır: Demir ve ark., Clin Transl Neurosci 2023;7:16 (SNS-TR).
+    // Skor = 6×Q1 + 9×Q2 − 5×Q3 − 11×Q4 − 13×Q5 + 20, cevaplar 1–5. Skor < 0 → katapleksili narkolepsi (NT1) şüphesi.
+    // Arayüz cevapları 0–4 verir, makale 1–5 kullanır: answerOffset 1. Skor 0 şüpheli sayılmaz (makalenin kesimi "< 0").
+    // Ham skor (−110…66) kullanıcıya anlam taşımadığı için showScore kapalı.
     scoring: {
-      weights: [1, 1, 1, 1, 1],
-      threshold: null,
+      weights: [6, 9, -5, -11, -13],
+      constant: 20,
+      answerOffset: 1,
+      threshold: 0,
+      suspectBelow: true,
     },
   },
 
@@ -65,12 +73,8 @@ export const TESTS = {
 // Sayfa ilk açıldığında seçili test. TESTS içinde olmalı.
 export const DEFAULT_TEST = "sns";
 
-// Sayaç (GoatCounter, ücretsiz). goatcounterCode boşken sayaç tamamen kapalıdır.
-// Kurulum: goatcounter.com'da site aç, kodu buraya yaz (ör. "narkolepsi" → narkolepsi.goatcounter.com),
-// site ayarlarında "Allow adding visitor counts on your website" seçeneğini aç.
 export const STATS = {
 	workerUrl: "https://narkolepsi-tally.rengincelik.workers.dev",
-	goatcounterCode: "rcelik",
-  // {id} test kimliğiyle değişir (ör. /test-completed/sns). Her test GoatCounter'da ayrı yol olarak görünür.
+	// goatcounterCode: "rcelik",
   paths: { view: "/", testDone: "/test-completed/{id}" },
 };

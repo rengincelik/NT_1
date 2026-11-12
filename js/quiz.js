@@ -3,6 +3,7 @@
 // Birden fazla testi tek arayüzde taşır: setTest(id) soru ekranlarını o testin soru/seçenek sayısına göre yeniden kurar.
 // Her testin cevapları ve kaldığı soru ayrı saklanır (sadece bellekte), test değiştirince kaybolmaz.
 // Metinler i18n'den gelir (tests.<id>.questions / scale); dil değişince yerinde güncellenir, cevaplar korunur.
+// Bir sorunun seçenekleri diğerlerinden farklıysa tests.<id>.scales.<soru>.<değer> verilir (SNS Q3); yoksa ortak scale kullanılır.
 import { t, onLangChange } from "./i18n.js";
 
 export function createQuiz({
@@ -81,11 +82,17 @@ export function createQuiz({
   }
 
   // --- Metin ve durum ---
+  function scaleText(i, v) {
+    const own = `tests.${id}.scales.${i}.${v}`;
+    const text = t(own);
+    return text === own ? t(`tests.${id}.scale.${v}`) : text;
+  }
+
   function refreshText() {
     for (let i = 0; i < count; i++) {
       questionEls[i].textContent = t(`tests.${id}.questions.${i}`);
       for (let v = 0; v < scaleSize; v++) {
-        optionTextEls[i][v].textContent = t(`tests.${id}.scale.${v}`);
+        optionTextEls[i][v].textContent = scaleText(i, v);
       }
     }
     if (tipEl) tipEl.textContent = t("test.tip", { min: keyBase, max: keyBase + scaleSize - 1 });

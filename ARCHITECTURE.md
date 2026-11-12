@@ -266,7 +266,7 @@ Dışa aktarır: `initTheme()`, `getTheme()`, `onThemeChange(fn)`.
 - **Uygulama:** seçim varsa `<html data-theme="dark|light">`. Seçim yoksa özellik hiç konmaz, renkleri `base.css` içindeki media query belirler. Seçim yokken sistem teması değişirse (`matchMedia` `change`) sayfa canlı değişir, buton ve `onThemeChange` dinleyicileri güncellenir.
 - **Buton (`#theme-btn`):** `aria-pressed` = şu an koyu mu. İkon `layout.css` ile `aria-pressed`'e göre seçilir (açıkken ay, koyuyken güneş: tıklayınca geçilecek tema). Tıklayınca ters tema seçilir, saklanır ve uygulanır. Etiket `theme.toggle` (`aria-label` `data-i18n-aria-label` ile, `title` JS ile ve dil değişince yenilenir).
 - **Açılışta çakma:** `<head>`'deki satır içi script (bölüm 4) kayıtlı seçimi CSS'ten önce uygular. Seçim yoksa CSS tek başına doğru temayı verir.
-- **`onThemeChange(fn)`:** şu an `main.js` tarafından dinlenmiyor. Dokunulmamış kazı-kazan kapağını yeni renklerle yeniden çizmek için hazır (`scratch.relabel()`).
+
 - Veri gönderilmez.
 
 ### `stats.js` (sayaç)
@@ -386,25 +386,3 @@ Dışa aktarır: `initRichText()`. Veri: `references.js > REFERENCES = { anahtar
 | Kaynak ekleme | `references.js > REFERENCES`, metinde `[@anahtar]` |
 | Narkolepsi metnine paragraf / başlık ekleme | her `locales/*.js > narcolepsy.body` dizisine eleman (başlık için `## ` ile başla) |
 | Kutuda kaydırma yüksekliği, hizalama | `components.css > .scroll-box` |
-
-### Yeni test ekleme
-
-Test seçici, quiz, sonuç, PDF özeti ve sayaç test kimliğine (`id`) göre çalışır, bu yüzden yeni test için yeni modül yazılmaz. Adımlar (örnek id: `ess`):
-
-1. **`js/config.js > TESTS`**: yeni anahtar ekle.
-   ```js
-   ess: {
-     questionCount: 8,
-     scaleSize: 4,
-     scoring: {
-       weights: [1, 1, 1, 1, 1, 1, 1, 1],
-       bands: [ { min: 0, key: "..." }, { min: N, key: "..." } ],   // artan min, N değerleri kaynaktan doğrulanmalı
-     },
-   },
-   ```
-   Tek eşikli bir test ise `bands` yerine `threshold` kullan (mesaj anahtarları `suspect` / `unlikely`). İsteğe bağlı: `keyBase: 0` (numaralar 0'dan), `showScore: true` (sonuçta ve PDF'te skor). Çalışan bir bant örneği: `TESTS.ess`.
-2. **Her `js/locales/*.js > tests.<id>`**: `name`, `subtitle`, `questions[]`, `scale[]`, `messages.<her band key>` (bant biçiminde `neutral` gerekmez, `threshold` biçiminde gerekir),  `intro[]` ve `copyright`. Soru ve seçenek sayıları 1. adımla aynı olmalı. Metinler telifli bir ölçekse lisans ve lisanslı çeviri gerekir, lisanslı metinler birebir kopyalanır (ESS örneği: `tests.ess`).
-3. **`worker/src/index.js > TEST_IDS`**: id'yi ekle, Worker'ı yeniden yayınla (`wrangler deploy`). Eklenmezse test bitişi Worker'dan 404 alır (sayfa bozulmaz, konsola uyarı yazılır, o test Worker'da sayılmaz). D1 şemasında değişiklik gerekmez, satır ilk sayımda oluşur.
-4. **Seçici otomatik görünür**: `TESTS` içinde 2 test olunca `#test-switch` açılır, buton etiketi `tests.<id>.name`.
-5. **Metin güncellemeleri (isteğe bağlı, içerik)**: `about.p2` ve `home.tagline` yeni testi de anlatacak şekilde, `narcolepsy.body` içine yeni testi anlatan paragraf, `references.js`'e kaynaklar, `footer.note` gerekiyorsa.
-6. **Kontrol**: `TESTS[id]` ile dil dosyalarındaki uzunluk ve anahtarlar tutarlı mı (bölüm 3, tutarlılık kuralları), her iki dilde testi bitir, test değiştirince cevapların ve sonucun korunduğunu gör.

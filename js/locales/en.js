@@ -1,12 +1,12 @@
 // İngilizce (varsayılan dil). Başka dillerde eksik kalan anahtarlar buradan gelir.
 export default {
   meta: {
-    title: "Narcolepsy",
-    description: "A 2-minute narcolepsy screening (Swiss Narcolepsy Scale).",
+    title: "UNRESTED",
+    description: "Quick Screening",
     dateLocale: "en-GB",
   },
 
-  site: { name: "Narcolepsy" },
+  site: { name: "UNRESTED" },
 
   nav: {
     aria: "Main menu",
@@ -31,7 +31,7 @@ export default {
 		p2: "Sleep matters for health, yet it's often overlooked. If you have even a passing suspicion about your daytime exhaustion, these short tests might give you some clarity. Excessive sleepiness can have many different causes, so if your symptoms persist, whatever your results, I'd recommend seeing a specialist. You can find a more detailed breakdown of narcolepsy further down the page."
 	},
   home: {
-    tagline: "Swiss Narcolepsy Scale (SNS)",
+    tagline: "What if sleep was never just sleep?",
     start: "Take the test",
     views: "page views",
     tests: "tests completed",
@@ -41,6 +41,7 @@ export default {
   narcolepsy: {
     title: "Narcolepsy",tocLabel: "Sections",
     body: [
+		"## Overview ",
       "Narcolepsy is a chronic neurological disorder of hypersomnolence in which the brain cannot properly regulate the sleep-wake cycle.[@scammell2015][@bassetti2021] It usually begins in the teenage years or young adulthood and stays for life.[@dauvilliers2007]",
       "Narcolepsy with cataplexy affects roughly 0.02% of adults worldwide, about 1 in 2,000.[@dauvilliers2007] Symptoms are often not recognized as narcolepsy, and studies report an average delay of up to 15 years before the diagnosis is made.[@thorpy2014]",
 
@@ -66,7 +67,7 @@ export default {
       "A formal diagnosis needs a full clinical and laboratory work-up.[@aasm2014]",
       "Overnight polysomnography (PSG) looks at the structure of night sleep and rules out other causes, such as obstructive sleep apnea.",
       "The Multiple Sleep Latency Test (MSLT) measures how quickly you fall asleep (an average of 8 minutes or less) and whether REM sleep starts within minutes of sleep onset (two or more sleep-onset REM periods).[@aasm2014][@littner2005]",
-      "The Swiss Narcolepsy Scale (SNS), the test on this site, is a short five-question screening tool for Type 1 narcolepsy, and its questions cover the five symptoms above. Several studies in different populations found that it separates Type 1 narcolepsy from other causes of sleepiness with high sensitivity and specificity.[@sturzenegger2004][@sturzenegger2018][@bargiotas2019] A Turkish version has been validated.[@demir2023] It does not detect Type 2, and a screening tool does not replace a diagnosis.[@bargiotas2019]",
+      "The Swiss Narcolepsy Scale (SNS), the test on this site, is a short five-question screening tool for Type 1 narcolepsy, and its questions ask about trouble falling asleep, feeling unrefreshed in the morning, daytime naps, and the two signs of cataplexy: knees buckling and the jaw sagging. Several studies in different populations found that it separates Type 1 narcolepsy from other causes of sleepiness with high sensitivity and specificity.[@sturzenegger2004][@sturzenegger2018][@bargiotas2019] A Turkish version has been validated.[@demir2023] It does not detect Type 2, and a screening tool does not replace a diagnosis.[@bargiotas2019]",
       "CSF hypocretin-1 measurement is the gold-standard biomarker for Type 1 narcolepsy.[@nishino2000]",
 
       "## Treatment",
@@ -96,30 +97,38 @@ export default {
   tests: {
     sns: {
       name: "Swiss Narcolepsy Scale (SNS)",
-      subtitle: "Swiss Narcolepsy Scale (SNS) · about 2 minutes",
-
+      subtitle: "Quick Narcolepsy Screening",
+		// Bu yönerge bize aittir (ESS'inki gibi lisanslı değildir), serbestçe düzenlenebilir.
+		intro: [
+			"These five questions ask how often certain things happen to you.",
+			"Think about how things usually are for you, and pick the answer that fits best.",
+			"There are no right or wrong answers, and you need to answer every question.",
+			"This is a screening tool for Type 1 narcolepsy, not a diagnosis.",
+		],
+      // Sorular ve seçenekler Sturzenegger ve ark. 2018, Tablo 1'den (CC BY-NC). Skorlama config.js'te; metni değiştirme.
       questions: [
-        "Do you find yourself suddenly falling asleep during the day?",
-        "When you get excited, laugh, or get angry, do you feel a sudden loss of muscle strength (knees buckling, jaw dropping, etc.)?",
-        "Is your sleep at night often interrupted? Do you have trouble sleeping through the night?",
-        "Do you have episodes where you can't move your body while falling asleep or waking up (sleep paralysis)?",
-        "Do you experience very vivid, dream-like, frightening images or sounds (hallucinations) while falling asleep or waking up?",
+        "How often are you unable to fall asleep?",
+        "How often do you feel bad or not well rested in the morning?",
+        "How often do you take a nap during the day?",
+        "How often have you experienced weak knees/buckling of the knees during emotions like laughing, happiness, or anger?",
+        "How often have you experienced sagging of the jaw during emotions like laughing, happiness, or anger?",
       ],
 
-      scale: ["Never", "Rarely", "Sometimes", "Often", "Always"],
+      scale: ["Never", "Rarely (less than once a month)", "Sometimes (1–3 times a month)", "Often (1–2 times a week)", "Almost always"],
+
+      // Q3'ün seçenekleri farklıdır (index 2)
+      scales: {
+        2: ["Never", "I would like to, but cannot", "1–2 times a week", "3–5 times a week", "Almost daily"],
+      },
 
       messages: {
         suspect: {
-          title: "Your score points to a possible concern",
-          body: "Don't ignore it. Don't put off booking an appointment with a neurologist or sleep specialist. You're not alone.",
+          title: "Your answers match a pattern seen in narcolepsy",
+          body: "This is a screening result, not a diagnosis. Please book an appointment with a neurologist or sleep specialist, and bring notes on your symptoms. You're not alone.",
         },
         unlikely: {
-          title: "Your score is below the threshold",
-          body: "That doesn't mean nothing is going on. If your symptoms continue, talk to a specialist.",
-        },
-        neutral: {
-          title: "Your answers are in",
-          body: "The threshold that interprets your score hasn't been added yet. If your symptoms bother you, talk to a neurologist or sleep specialist. You're not alone.",
+          title: "Your answers don't match the typical pattern",
+          body: "That doesn't mean nothing is going on. This scale looks only for Type 1 narcolepsy and can miss some people. If you are still very sleepy during the day, talk to a doctor, because sleepiness has many other causes.",
         },
       },
 
@@ -127,7 +136,7 @@ export default {
 
     ess: {
       name: "Epworth Sleepiness Scale (ESS)",
-      subtitle: "Epworth Sleepiness Scale (ESS) · about 2 minutes",
+      subtitle: "Assess your level of daytime sleepiness",
 
       // Yönerge ve maddeler lisanslı metindir (Mapi Research Trust, ESS_AU1.0_eng-US2). Değiştirme.
       intro: [
@@ -193,7 +202,7 @@ export default {
   },
 
   footer: {
-    role: "A short description",
+    role: "The Mind Behind Unrested",
     note: "This page is not a diagnostic tool. It only gives an idea of whether you should see a neurologist or sleep specialist. Your answers never leave this device and are not stored anywhere.",
     statsNote: "This site only counts visits and completed tests, anonymously. Your answers and results are never sent.",
   },

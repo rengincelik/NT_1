@@ -1,12 +1,12 @@
 // Türkçe
 export default {
   meta: {
-    title: "Narkolepsi",
-    description: "Narkolepsi ön taraması (İsviçre Narkolepsi Ölçeği).",
+    title: "UNRESTED",
+    description: "Hızlı Ön Tarama",
     dateLocale: "tr-TR",
   },
 
-  site: { name: "Narkolepsi" },
+  site: { name: "UNRESTED" },
 
   nav: {
     aria: "Ana menü",
@@ -33,7 +33,7 @@ export default {
 	},
 
   home: {
-    tagline: "İsviçre Narkolepsi Ölçeği (SNS) · yaklaşık 2 dakika",
+    tagline: "What if sleep was never just sleep?" +"\n" + "Ya uyku, hiçbir zaman sadece uyku olmadıysa?",
     start: "Teste geç",
     views: "görüntülenme",
     tests: "tamamlanan test",
@@ -44,6 +44,7 @@ export default {
 	narcolepsy: {
 		title: "Narkolepsi",tocLabel: "Bölümler",
 		body: [
+			"## Genel Bakış",
 			"Narkolepsi, beynin uyku-uyanıklık döngüsünü düzgün düzenleyememesine bağlı, kronik nörolojik bir aşırı uykululuk hastalığıdır.[@scammell2015][@bassetti2021] Genellikle ergenlikte ya da genç yetişkinlikte başlar ve ömür boyu sürer.[@dauvilliers2007]",
 			"Kataplektik narkolepsi dünyada yetişkinlerin yaklaşık %0,02'sini, yani yaklaşık 2.000 kişide 1'ini etkiler.[@dauvilliers2007] Belirtiler çoğu zaman narkolepsi olarak tanınmaz ve çalışmalar tanıya kadar geçen ortalama sürenin 15 yıla kadar çıkabildiğini bildirir.[@thorpy2014]",
 
@@ -69,7 +70,7 @@ export default {
 			"Kesin tanı, kapsamlı bir klinik ve laboratuvar değerlendirmesi gerektirir.[@aasm2014]",
 			"Gece polisomnografisi (PSG), gece uykusunun yapısına bakar ve obstrüktif uyku apnesi gibi diğer nedenleri dışlar.",
 			"Çoklu Uyku Latansı Testi (MSLT), uykuya ne kadar hızlı daldığınızı (ortalama 8 dakika veya daha kısa) ve uykuya dalıştan hemen sonra REM uykusunun başlayıp başlamadığını (iki veya daha fazla uyku başlangıcı REM dönemi) ölçer.[@aasm2014][@littner2005]",
-			"Bu sitedeki test olan İsviçre Narkolepsi Ölçeği (SNS), Tip 1 narkolepsi için kullanılan, beş soruluk kısa bir tarama aracıdır ve soruları yukarıdaki beş belirtiyi kapsar. Farklı toplumlarda yapılan çalışmalar, Tip 1 narkolepsiyi diğer uykululuk nedenlerinden yüksek duyarlılık ve özgüllükle ayırdığını göstermiştir.[@sturzenegger2004][@sturzenegger2018][@bargiotas2019] Ölçeğin Türkçe sürümünün geçerlik ve güvenirliği gösterilmiştir.[@demir2023] Tip 2'yi saptayamaz ve bir tarama aracı tanının yerini tutmaz.[@bargiotas2019]",
+			"Bu sitedeki test olan İsviçre Narkolepsi Ölçeği (SNS), Tip 1 narkolepsi için kullanılan, beş soruluk kısa bir tarama aracıdır ve soruları uykuya dalamamayı, sabahları dinlenmemiş uyanmayı, gündüz şekerlemesini ve katapleksinin iki belirtisini (diz çözülmesi ve çene düşmesi) sorar. Farklı toplumlarda yapılan çalışmalar, Tip 1 narkolepsiyi diğer uykululuk nedenlerinden yüksek duyarlılık ve özgüllükle ayırdığını göstermiştir.[@sturzenegger2004][@sturzenegger2018][@bargiotas2019] Ölçeğin Türkçe sürümünün geçerlik ve güvenirliği gösterilmiştir.[@demir2023] Tip 2'yi saptayamaz ve bir tarama aracı tanının yerini tutmaz.[@bargiotas2019]",
 			"BOS hipokretin-1 ölçümü, Tip 1 narkolepsi için altın standart biyobelirteçtir.[@nishino2000]",
 
 			"## Tedavi",
@@ -99,32 +100,40 @@ export default {
     sns: {
       name: "İsviçre Narkolepsi Ölçeği (SNS)",
       subtitle: "İsviçre Narkolepsi Ölçeği (SNS)",
-
+		// Bu yönerge bize aittir (ESS'inki gibi lisanslı değildir), serbestçe düzenlenebilir.
+		intro: [
+			"Bu beş soru bazı durumların sana ne sıklıkla olduğunu soruyor.",
+			"Genelde nasıl olduğunu düşün ve sana en uygun cevabı seç.",
+			"Doğru ya da yanlış cevap yok, her soruyu cevaplaman gerekiyor.",
+			"Bu, Tip 1 narkolepsi için bir tarama aracıdır, tanı değildir.",
+		],
+      // GEÇİCİ TÜRKÇE METİN: Resmi SNS-TR (Demir ve ark. 2023) metni makalede yok. Yazarlardan alınınca bununla değiştir.
+      // Soru sırası ve seçenek sayısı skorlamayı belirler (config.js), değiştirme.
       questions: [
-        "Gündüz vakti kendinizi aniden uykuya dalarken buluyor musunuz?",
-        "Heyecanlandığınızda, güldüğünüzde veya öfkelendiğinizde kaslarınızda ani bir gevşeme veya güçsüzlük (diz çözülmesi, çene düşmesi vb.) hissediyor musunuz?",
-        "Gece uykularınız sık sık bölünür mü, deliksiz uyumakta zorlanır mısınız?",
-        "Uykuya dalarken veya uyanırken vücudunuzu hareket ettiremediğiniz (uyku felci) durumlar oluyor mu?",
-        "Uykuya dalarken veya uyanırken rüya benzeri, çok canlı ve korkutucu görüntüler ya da sesler (halüsinasyon) yaşar mısınız?",
+        "Ne sıklıkla uykuya dalamıyorsunuz?",
+        "Ne sıklıkla sabahları kendinizi kötü ya da yeterince dinlenmemiş hissediyorsunuz?",
+        "Ne sıklıkla gün içinde şekerleme yapıyorsunuz?",
+        "Gülme, mutluluk ya da öfke gibi duygular sırasında ne sıklıkla dizlerinizde güçsüzlük ya da çözülme yaşadınız?",
+        "Gülme, mutluluk ya da öfke gibi duygular sırasında ne sıklıkla çenenizde düşme (sarkma) yaşadınız?",
       ],
 
-      scale: ["Hiç", "Nadiren", "Bazen", "Sık", "Hep"],
+      scale: ["Hiç", "Nadiren (ayda birden az)", "Bazen (ayda 1–3 kez)", "Sık (haftada 1–2 kez)", "Neredeyse her zaman"],
+
+      // Q3'ün seçenekleri farklıdır (index 2)
+      scales: {
+        2: ["Hiç", "İsterdim ama yapamıyorum", "Haftada 1–2 kez", "Haftada 3–5 kez", "Neredeyse her gün"],
+      },
 
       messages: {
         suspect: {
-          title: "Skorun şüpheli bir duruma işaret ediyor",
-          body: "Bunu ihmal etme. Bir nöroloji veya uyku uzmanından randevu almayı erteleme. Yalnız değilsin.",
+          title: "Cevapların narkolepside görülen bir örüntüyle uyuşuyor",
+          body: "Bu bir tarama sonucudur, tanı değildir. Bir nöroloji veya uyku uzmanından randevu al, belirtilerini not edip yanında götür. Yalnız değilsin.",
         },
         unlikely: {
-          title: "Skorun eşiğin altında",
-          body: "Bu, bir sorun olmadığı anlamına gelmez. Yine de şikâyetlerin devam ediyorsa bir uzmana danış.",
-        },
-        neutral: {
-          title: "Cevapların alındı",
-          body: "Skorunu yorumlayan eşik henüz eklenmedi. Şikâyetlerin seni rahatsız ediyorsa bir nöroloji veya uyku uzmanıyla konuş. Yalnız değilsin.",
+          title: "Cevapların tipik örüntüyle uyuşmuyor",
+          body: "Bu, bir sorun olmadığı anlamına gelmez. Bu ölçek yalnızca Tip 1 narkolepsiye bakar ve bazı kişileri kaçırabilir. Gündüzleri hâlâ çok uykuluysan bir hekimle konuş, çünkü uykululuğun birçok başka nedeni vardır.",
         },
       },
-
 
     },
 
@@ -196,7 +205,7 @@ export default {
   },
 
   footer: {
-    role: "Kısa bir tanım",
+    role: "The Mind Behind Unrested",
     note: "Bu sayfa bir teşhis aracı değildir. Yalnızca bir nöroloji veya uyku uzmanına gitmen gerekip gerekmediği konusunda fikir verir. Cevapların bu cihazdan çıkmaz, hiçbir yere kaydedilmez.",
     statsNote: "Bu site yalnızca ziyaret ve tamamlanan test sayısını anonim olarak sayar. Cevapların ve sonucun hiçbir yere gönderilmez.",
   },
