@@ -69,7 +69,8 @@ export const DEFAULT_TEST = "sns";
 // Kurulum: goatcounter.com'da site aç, kodu buraya yaz (ör. "narkolepsi" → narkolepsi.goatcounter.com),
 // site ayarlarında "Allow adding visitor counts on your website" seçeneğini aç.
 export const STATS = {
-  goatcounterCode: "rcelik",
+	workerUrl: "https://narkolepsi-tally.rengincelik.workers.dev",
+	goatcounterCode: "rcelik",
   // {id} test kimliğiyle değişir (ör. /test-completed/sns). Her test GoatCounter'da ayrı yol olarak görünür.
   paths: { view: "/", testDone: "/test-completed/{id}" },
 };
