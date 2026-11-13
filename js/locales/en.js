@@ -1,12 +1,12 @@
 // İngilizce (varsayılan dil). Başka dillerde eksik kalan anahtarlar buradan gelir.
 export default {
   meta: {
-    title: "UNRESTED",
-    description: "Quick Screening",
+    title: "Still Tired",
+    description: "Sleep isn’t always as simple as it seems.",
     dateLocale: "en-GB",
   },
 
-  site: { name: "UNRESTED" },
+  site: { name: "Still Tired" },
 
   nav: {
     aria: "Main menu",
@@ -31,7 +31,8 @@ export default {
 		p2: "Sleep matters for health, yet it's often overlooked. If you have even a passing suspicion about your daytime exhaustion, these short tests might give you some clarity. Excessive sleepiness can have many different causes, so if your symptoms persist, whatever your results, I'd recommend seeing a specialist. You can find a more detailed breakdown of narcolepsy further down the page."
 	},
   home: {
-    tagline: "What if sleep was never just sleep?",
+	  title: "<span>Can't sleep at night.</span> <span>Can't stay awake by day.</span>",
+    subtitle: "Sleep isn't always as simple as it seems.",
     start: "Take the test",
     views: "page views",
     tests: "tests completed",
@@ -202,7 +203,7 @@ export default {
   },
 
   footer: {
-    role: "The Mind Behind Unrested",
+    role: "Designed & developed by Rengin Çelik",
     note: "This page is not a diagnostic tool. It only gives an idea of whether you should see a neurologist or sleep specialist. Your answers never leave this device and are not stored anywhere.",
     statsNote: "This site only counts visits and completed tests, anonymously. Your answers and results are never sent.",
   },

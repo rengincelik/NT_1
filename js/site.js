@@ -7,9 +7,6 @@ function renderFooter() {
   const footer = document.getElementById("footer");
   if (!footer) return;
 
-  const name = document.createElement("p");
-  name.className = "author-name";
-  name.textContent = AUTHOR.name;
 
   const role = document.createElement("p");
   role.className = "author-role";
@@ -34,7 +31,7 @@ function renderFooter() {
   note.className = "footer-note";
   note.textContent = t("footer.note");
 
-  const parts = [name, role, list, note];
+  const parts = [ role, list, note];
 
   // Sayaç açıksa bunu söylemek zorundayız, kapalıyken söylemek yanlış olur
   if (statsEnabled) {

@@ -1,12 +1,12 @@
 // Türkçe
 export default {
   meta: {
-    title: "UNRESTED",
+	  title: "Still Tired",
     description: "Hızlı Ön Tarama",
     dateLocale: "tr-TR",
   },
 
-  site: { name: "UNRESTED" },
+	site: { name: "Still Tired" },
 
   nav: {
     aria: "Ana menü",
@@ -33,8 +33,10 @@ export default {
 	},
 
   home: {
-    tagline: "What if sleep was never just sleep?" +"\n" + "Ya uyku, hiçbir zaman sadece uyku olmadıysa?",
-    start: "Teste geç",
+
+	  title: "<span>Gece uyuyamıyorum.</span> <span>Gündüz uyanık kalamıyorum.</span>",
+	  subtitle: "Uyku her zaman göründüğü kadar basit olmayabilir.",
+	  start: "Teste geç",
     views: "görüntülenme",
     tests: "tamamlanan test",
   },
@@ -205,7 +207,7 @@ export default {
   },
 
   footer: {
-    role: "The Mind Behind Unrested",
+	  role: "Designed & developed by Rengin Çelik",
     note: "Bu sayfa bir teşhis aracı değildir. Yalnızca bir nöroloji veya uyku uzmanına gitmen gerekip gerekmediği konusunda fikir verir. Cevapların bu cihazdan çıkmaz, hiçbir yere kaydedilmez.",
     statsNote: "Bu site yalnızca ziyaret ve tamamlanan test sayısını anonim olarak sayar. Cevapların ve sonucun hiçbir yere gönderilmez.",
   },

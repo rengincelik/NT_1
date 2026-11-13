@@ -41,9 +41,14 @@ function applyStatic() {
   document.title = t("meta.title");
   document.querySelector('meta[name="description"]')?.setAttribute("content", t("meta.description"));
 
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    el.textContent = t(el.dataset.i18n);
-  });
+	document.querySelectorAll('[data-i18n]').forEach(el => {
+		const text = t(el.dataset.i18n); // senin çeviri fonksiyonun
+		if (el.hasAttribute('data-i18n-html')) {
+			el.innerHTML = text;
+		} else {
+			el.textContent = text;
+		}
+	});
   document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
     el.setAttribute("aria-label", t(el.dataset.i18nAriaLabel));
   });
